@@ -113,7 +113,7 @@ public class VectorTest {
 
         assertTrue(vecUnitX.equals(vecUnitX2));
         assertFalse(vecUnitX.equals(vecUnitY));
-        assertFalse(vecUnitX.equals(null));
+        assertFalse(vecUnitX.equals(vecStandard3D));
     }
 
     @Test

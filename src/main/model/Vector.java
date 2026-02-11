@@ -1,38 +1,71 @@
 package model;
 
+import java.util.Arrays;
+
 public class Vector {
     private Fraction[] components;
     private int size;
 
-    // REQUIRES: components != null, components.size() > 0;
+    // REQUIRES: components != null, components.length > 0;
     // EFFECTS constructs a vector with the given fraction components
     public Vector(Fraction[] components) {
-        this.size = 0;
-        this.components = components;
+        this.size = components.length;
+        this.components = Arrays.copyOf(components, components.length);
     }
 
     // REQUIRES: V2 != null, this.size() == v2.size()
-    //EFFECTS: returns a new Vector that is the sum of this and v2
+    // EFFECTS: returns a new Vector that is the sum of this and v2
     public Vector add(Vector v2) {
-        return null;
+        int length = size();
+        Fraction[] resultComponents = new Fraction[length];
+
+        for (int i = 0; i < length; i++) {
+            Fraction f1 = this.getComponent(i);
+            Fraction f2 = v2.getComponent(i);
+            resultComponents[i] = f1.add(f2);
+        }
+        return new Vector(resultComponents);
     }
 
     // REQUIRES: V2 != null, this.size() == v2.size()
-    //EFFECTS: returns a new Vector that is the difference of this and v2
+    // EFFECTS: returns a new Vector that is the difference of this and v2
     public Vector subtract(Vector v2) {
-        return null;
+        int length = size();
+        Fraction[] resultComponents = new Fraction[length];
+
+        for (int i = 0; i < length; i++) {
+            Fraction f1 = this.getComponent(i);
+            Fraction f2 = v2.getComponent(i);
+            resultComponents[i] = f1.subtract(f2);
+        }
+        return new Vector(resultComponents);
     }
 
     // REQUIRES: scalar != null
     // EFFECTS: returns a new Vector where each component is multiplied bt scalar
     public Vector scalarMultiply(Fraction scalar) {
-        return null;
+        int length = size();
+        Fraction[] resultComponents = new Fraction[length];
+
+        for (int i = 0; i < length; i++) {
+            Fraction f1 = this.getComponent(i);
+            resultComponents[i] = f1.multiply(scalar);
+        }
+        return new Vector(resultComponents);
     }
 
     // REQUIRES: V2 != null, this.size() == v2.size()
     // EFFECTS: returns the dot product of this vector and v2
     public Fraction dot(Vector v2) {
-        return null;
+        int length = size();
+        Fraction sum = new Fraction(0, 1);
+        for (int i = 0; i < length; i++) {
+            Fraction f1 = this.getComponent(i);
+            Fraction f2 = v2.getComponent(i);
+            Fraction product = f1.multiply(f2);
+            sum = sum.add(product);
+        }
+        return sum;
     }
 
     // REQUIRES: V2 != null, this.size() == v2.size() == 3
@@ -43,41 +76,72 @@ public class Vector {
 
     // EFFECTS: returns the magnitude of this vector as as a double
     public double getMagnitude() {
-        return 0.0;
+        int length = size();
+        Fraction squaredSum = new Fraction(0, 0);
+        for (int i = 0; i < length; i++) {
+            Fraction f1 = this.getComponent(i);
+            squaredSum = squaredSum.add(f1.multiply(f1));
+        }
+        return Math.sqrt(squaredSum.toDecimal());
     }
 
     // REQUIRES: this.getMagnitude() != 0
     // EFFECTS: returns a new Vector with a magnitude of 1 in the same direction
     public Vector normalize() {
-        return null;
+        double mag = getMagnitude();
+        Fraction[] unitComponents = new Fraction[size()];
+        for (int i = 0; i < this.size; i++) {
+            double originalValue = this.components[i].toDecimal();
+            double normalizedValue = originalValue / mag;
+            unitComponents[i] = new Fraction(Math.round(normalizedValue * 1000000), 1000000);
+        }
+        return new Vector(unitComponents);
     }
 
     // REQUIRES: v2 != null, this.size() == v2.size()
     // EFFECTS: returns true if the dot product of this and v2 is 0
     public boolean isOrthogonal(Vector v2) {
-        return false;
+        Fraction dotProduct = this.dot(v2);
+        return dotProduct.getNumerator() == 0;
     }
 
-    //EFFECTS: gets the number of components in the vector
+    // EFFECTS: gets the number of components in the vector
     public int size() {
-        return 0;
+        return this.size;
     }
 
     // REQUIRES index >= 0, index < this.size()
     // EFFECTS: returns the component at the specified index
     public Fraction getComponent(int index) {
-        return null;
+        return this.components[index];
     }
 
     // REQUIRES: v2 != null
-    // EFFECTS: returns true if this vector and the other have the same size and identical components
+    // EFFECTS: returns true if this vector and the other have the same size and
+    // identical components
     public boolean equals(Vector v2) {
-        return false;
+        int length = size();
+        if (length != v2.size()) {
+            return false;
+        }
+        for (int i = 0; i < length; i++) {
+            if (!this.getComponent(i).equals(v2.getComponent(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    // EFFECTS: returns a string representation of the fraction example "[1/2, 2/3, -1/1]"
+    // EFFECTS: returns a string representation of the fraction example "[1/2, 2/3,
+    // -1/1]"
     public String toString() {
-        return "";
+        String strVector = "[";
+        int length = size();
+        for (int i = 0; i < length; i++) {
+            strVector = strVector + this.getComponent(i).toString() + ", ";
+        }
+        strVector = strVector.substring(0, strVector.length() - 2) + ']';
+        return strVector;
     }
 
 }

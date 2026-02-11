@@ -106,14 +106,14 @@ public class FractionTest {
     }
 
     @Test
-    public void testZeroNumerator() {
+    void testZeroNumerator() {
         Fraction zero = new Fraction(0, 5);
         assertEquals(0, zero.getNumerator());
         assertEquals(1, zero.getDenominator()); 
     }
 
     @Test
-    public void testLargeNumbers() {
+    void testLargeNumbers() {
         Fraction large1 = new Fraction(1000000, 1);
         Fraction large2 = new Fraction(1000000, 1);
         Fraction result = large1.multiply(large2);
