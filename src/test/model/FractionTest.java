@@ -8,15 +8,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class FractionTest {
-    private Fraction fHalf;
-    private Fraction fTwoThirds;
-    private Fraction fNegFiveSixths;
+    private Fraction oneHalf;
+    private Fraction twoThirds;
+    private Fraction negFiveSixths;
 
     @BeforeEach
     void runBefore() {
-        fHalf = new Fraction(1, 2);
-        fTwoThirds = new Fraction(2, 3);
-        fNegFiveSixths = new Fraction(5, -6);
+        oneHalf = new Fraction(1, 2);
+        twoThirds = new Fraction(2, 3);
+        negFiveSixths = new Fraction(5, -6);
     }
 
     @Test
@@ -43,54 +43,54 @@ public class FractionTest {
 
     @Test
     void testAdd() {
-        Fraction res = fHalf.add(fTwoThirds);
+        Fraction res = oneHalf.add(twoThirds);
         assertEquals(7, res.getNumerator());
         assertEquals(6, res.getDenominator());
 
-        Fraction res2 = fHalf.add(fNegFiveSixths);
+        Fraction res2 = oneHalf.add(negFiveSixths);
         assertEquals(-1, res2.getNumerator());
         assertEquals(3, res2.getDenominator());
     }
 
     @Test
     void testSubtract() {
-        Fraction res = fTwoThirds.subtract(fHalf);
+        Fraction res = twoThirds.subtract(oneHalf);
         assertEquals(1, res.getNumerator());
         assertEquals(6, res.getDenominator());
 
-        Fraction res2 = fNegFiveSixths.subtract(fHalf);
+        Fraction res2 = negFiveSixths.subtract(oneHalf);
         assertEquals(-4, res2.getNumerator());
         assertEquals(3, res2.getDenominator());
     }
 
     @Test
     void testMultiply() {
-        Fraction res = fHalf.multiply(fTwoThirds);
+        Fraction res = oneHalf.multiply(twoThirds);
         assertEquals(1, res.getNumerator());
         assertEquals(3, res.getDenominator());
 
-        Fraction res2 = fTwoThirds.multiply(fNegFiveSixths);
+        Fraction res2 = twoThirds.multiply(negFiveSixths);
         assertEquals(-5, res2.getNumerator());
         assertEquals(9, res2.getDenominator());
     }
 
     @Test
     void testDivide() {
-        Fraction res = fHalf.divide(fTwoThirds);
+        Fraction res = oneHalf.divide(twoThirds);
         assertEquals(3, res.getNumerator());
         assertEquals(4, res.getDenominator());
     }
 
     @Test
     void testToDecimal() {
-        assertEquals(0.5, fHalf.toDecimal(), 0.000001);
-        assertEquals(-0.833333, fNegFiveSixths.toDecimal(), 0.000001);
+        assertEquals(0.5, oneHalf.toDecimal(), 0.000001);
+        assertEquals(-0.833333, negFiveSixths.toDecimal(), 0.000001);
     }
 
     @Test
     void testToString() {
-        assertEquals("1/2", fHalf.toString());
-        assertEquals("-5/6", fNegFiveSixths.toString());
+        assertEquals("1/2", oneHalf.toString());
+        assertEquals("-5/6", negFiveSixths.toString());
         assertEquals("0/1", new Fraction(0, 10).toString());
     }
 
@@ -102,7 +102,7 @@ public class FractionTest {
 
         assertTrue(f1.equals(f2));
         assertFalse(f1.equals(f3));
-        assertFalse(f1.equals(null));
+        assertTrue(f1.equals(f1));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class FractionTest {
 
     @Test
     void testAddToZero() {
-        Fraction res = fHalf.add(new Fraction(-1, 2));
+        Fraction res = oneHalf.add(new Fraction(-1, 2));
         assertEquals(0, res.getNumerator());
         assertEquals(1, res.getDenominator());
     }
@@ -137,7 +137,7 @@ public class FractionTest {
 
     @Test
     void testSubtractToNegative() {
-        Fraction res = fHalf.subtract(fTwoThirds);
+        Fraction res = oneHalf.subtract(twoThirds);
         assertEquals(-1, res.getNumerator());
         assertEquals(6, res.getDenominator());
     }

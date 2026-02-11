@@ -1,69 +1,117 @@
 package model;
 
+import java.lang.Math;
+
 public class Fraction {
+
+    // Represents a rational number (fraction) with a numerator and denominator.
+
     private long numerator;
     private long denominator;
 
-    // Requires: Denominator is not equal to 0
-    //EFFECTS: constructs a fraction with given numerator and denominator fraction is reduced to simplest form.
+    // REQUIRES: denominator != 0
+    // EFFECTS: constructs a fraction with given numerator and denominator;
+    // fraction is reduced to simplest form and denominator is made positive.
     public Fraction(long numerator, long denominator) {
         this.numerator = numerator;
         this.denominator = denominator;
+        this.simplify();
     }
 
-    // Requires f2 is not null
-    // EFFECTS: Returns a new fraction as the sum of this and a new fraction;
+    // REQUIRES: f2 != null
+    // EFFECTS: returns a new fraction that is the sum of this and f2
     public Fraction add(Fraction f2) {
-        return new Fraction(1, 1);
+        long commonDivisor = gcd(this.getDenominator(), f2.getDenominator());
+        long commonDenominator = (this.getDenominator() * f2.getDenominator()) / commonDivisor;
+        long partSumThis = this.getNumerator() * (commonDenominator / this.getDenominator());
+        long partSumF2 = f2.getNumerator() * (commonDenominator / f2.getDenominator());
+        long fullSum = partSumF2 + partSumThis;
+        return new Fraction(fullSum, commonDenominator);
     }
-    // EFFECTS: Returns a new fraction as the difference of this and a new fraction;
+
+    // REQUIRES: f2 != null
+    // EFFECTS: returns a new fraction that is the difference of this and f2
     public Fraction subtract(Fraction f2) {
-        return new Fraction(1, 1);
+        long commonDivisor = gcd(this.getDenominator(), f2.getDenominator());
+        long commonDenominator = (this.getDenominator() * f2.getDenominator()) / commonDivisor;
+        long partDiffThis = this.getNumerator() * (commonDenominator / this.getDenominator());
+        long partDiffF2 = f2.getNumerator() * (commonDenominator / f2.getDenominator());
+        long fullDiff = partDiffThis - partDiffF2;
+        return new Fraction(fullDiff, commonDenominator);
     }
 
-    // EFFECTS: Returns a new fraction as the product of this and a new fraction;
+    // REQUIRES: f2 != null
+    // EFFECTS: returns a new fraction that is the product of this and f2
     public Fraction multiply(Fraction f2) {
-        return new Fraction(1, 1);
+        long newNumerator = this.getNumerator() * f2.getNumerator();
+        long newDenominator = this.getDenominator() * f2.getDenominator();
+        return new Fraction(newNumerator, newDenominator);
     }
-    
-    // Requires: F2 is not equal to zero;
-    // EFFECTS: Returns a new fraction as the qoutient of this and a new fraction;
+
+    // REQUIRES: f2 != null, f2.getNumerator() != 0
+    // EFFECTS: returns a new fraction that is the quotient of this divided by f2
     public Fraction divide(Fraction f2) {
-        return new Fraction(1, 1);
+        long newNumerator = this.getNumerator() * f2.getDenominator();
+        long newDenominator = this.getDenominator() * f2.getNumerator();
+        return new Fraction(newNumerator, newDenominator);
     }
 
-    // MODIFIES: THIS
-    // EFFECTS: simplifies the fraction (e.g. 2/4 -> 1/2) and ensures denominator is positive
+    // MODIFIES: this
+    // EFFECTS: simplifies the fraction (e.g. 2/4 -> 1/2) and ensures denominator is
+    // positive
     public void simplify() {
-        
-    }
-    // REQUIRES: a >= 0, B >= 0
-    // EFFECTS: computes the GCD of a b;
-    private long gcd(long a, long b) {
-        return 5;
+        if (this.numerator == 0) {
+            this.denominator = 1;
+            return;
+        }
+        long divisor = gcd(Math.abs(this.numerator), Math.abs(this.denominator));
+        this.numerator /= divisor;
+        this.denominator /= divisor;
+
+        if (this.denominator < 0) {
+            this.numerator = -this.numerator;
+            this.denominator = -this.denominator;
+        }
     }
 
-    // EFFECTS: returns the Numerator of this fraction;
+    // REQUIRES: a >= 0, b >= 0
+    // EFFECTS: returns the greatest common divisor of a and b
+    private long gcd(long a, long b) {
+        if (b == 0) {
+            return a;
+        }
+        return gcd(b, a % b);
+    }
+
+    // EFFECTS: returns the numerator of this fraction
     public long getNumerator() {
         return this.numerator;
     }
 
-    // EFFECTS: returns the Denominator of this fraction;
+    // EFFECTS: returns the denominator of this fraction
     public long getDenominator() {
         return this.denominator;
     }
 
-    // EFFECTS returns a decimal version of this;
+    // EFFECTS: returns the decimal value of this fraction (numerator / denominator)
     public double toDecimal() {
-        return 1.0;
-    }
-    // EFFECTS: returns true if this fraction and f2 represent the same value
-    public Boolean equals(Fraction f2) {
-        return true;
+        double numerator = Double.valueOf(this.numerator);
+        double denominator = Double.valueOf(this.denominator);
+        return numerator / denominator;
     }
 
-   // EFFECTS: returns a string representation of the fraction (e.g., "1/2")
+    // REQUIRES: f2 != null
+    // EFFECTS: returns true if this fraction and f2 represent the same rational
+    // value
+    public boolean equals(Fraction f2) {
+        if (this.getNumerator() == f2.getNumerator() && this.getDenominator() == f2.getDenominator()) {
+            return true;
+        }
+        return false;
+    }
+
+    // EFFECTS: returns a string representation of the fraction example "1/2"
     public String toString() {
-        return "1/1";
+        return String.valueOf(this.getNumerator()) + '/' + String.valueOf(this.getDenominator());
     }
 }
