@@ -96,7 +96,6 @@ public class MatrixTest {
         a.setElement(0, 2, new Fraction(7, 1));
 
         Matrix at = a.transpose();
-        assertTrue(at.isSquare());
         assertEquals(7, at.getElement(2, 0).getNumerator());
     }
 
@@ -127,6 +126,13 @@ public class MatrixTest {
         m.setElement(1, 1, new Fraction(4, 1));
 
         assertEquals(-2, m.getDeterminant().getNumerator());
+
+        Matrix singular = new Matrix(2, 2);
+        singular.setElement(0, 0, f1);
+        singular.setElement(0, 1, f1);
+        singular.setElement(1, 0, f1);
+        singular.setElement(1, 1, f1);
+        assertEquals(0, singular.getDeterminant().getNumerator());
     }
 
     @Test
@@ -142,6 +148,7 @@ public class MatrixTest {
         assertNotNull(x);
         assertEquals(5, x.getComponent(0).getNumerator());
         assertEquals(10, x.getComponent(1).getNumerator());
+        assertTrue(identity.isConsistent(b));
     }
 
     @Test
@@ -152,6 +159,108 @@ public class MatrixTest {
 
         assertNull(zero.solve(b));
         assertFalse(zero.isConsistent(b));
+    }
+
+    @Test
+    void testSolveNonSquare() {
+        Matrix m = new Matrix(2, 3);
+        m.setElement(0, 0, f1);
+        m.setElement(0, 1, f1);
+        m.setElement(0, 2, f1);
+        m.setElement(1, 1, f1);
+        m.setElement(1, 2, f1);
+
+        Vector b = new Vector(new Fraction[] { new Fraction(0, 1),
+                new Fraction(1, 1) });
+
+        assertNull(m.solve(b));
+    }
+
+    @Test
+    void testSolveInfiniteSolutions() {
+        Matrix m = new Matrix(2, 2);
+        m.setElement(0, 0, f1);
+        m.setElement(0, 1, f1);
+        m.setElement(1, 0, new Fraction(2, 1));
+        m.setElement(1, 1, new Fraction(2, 1));
+
+        Vector b = new Vector(new Fraction[] { new Fraction(2, 1),
+                new Fraction(4, 1) });
+
+        assertTrue(m.isConsistent(b));
+        assertNull(m.solve(b));
+    }
+
+    @Test
+    void testrrefWithSwap() {
+        Matrix m = new Matrix(2, 2);
+        m.setElement(0, 0, new Fraction(0, 1));
+        m.setElement(0, 1, new Fraction(1, 1));
+        m.setElement(1, 0, new Fraction(1, 1));
+        m.setElement(1, 1, new Fraction(0, 1));
+
+        m.calculaterref();
+
+        assertEquals(1, m.getElement(0, 0).getNumerator());
+        assertEquals(0, m.getElement(0, 1).getNumerator());
+
+        assertTrue(m.getLog().toString().contains("R1 <-> R0"));
+    }
+
+    @Test
+    void testrrefWithElimination() {
+
+        Matrix m = new Matrix(2, 2);
+        m.setElement(0, 0, new Fraction(1, 1));
+        m.setElement(1, 0, new Fraction(1, 1));
+        m.setElement(1, 1, new Fraction(1, 1));
+
+        m.calculaterref();
+
+        assertEquals(0, m.getElement(1, 0).getNumerator());
+    }
+
+    @Test
+    void testrrefWithScaling() {
+        Matrix m = new Matrix(2, 2);
+        m.setElement(0, 0, new Fraction(2, 1));
+        m.setElement(1, 1, new Fraction(1, 1));
+
+        m.calculaterref();
+
+        assertEquals(1, m.getElement(0, 0).getNumerator());
+
+        assertTrue(m.getLog().toString().contains(" * R0 -> R0"));
+    }
+
+    @Test
+    void testInverse() {
+        Matrix m1 = new Matrix(2, 2);
+        m1.setElement(0, 0, new Fraction(1, 1));
+        m1.setElement(0, 1, new Fraction(2, 1));
+        m1.setElement(1, 0, new Fraction(3, 1));
+        m1.setElement(1, 1, new Fraction(4, 1));
+
+        Matrix inv1 = m1.invert();
+
+        assertEquals(new Fraction(-2, 1), inv1.getElement(0, 0));
+        assertEquals(new Fraction(1, 1), inv1.getElement(0, 1));
+        assertEquals(new Fraction(3, 2), inv1.getElement(1, 0)); 
+        assertEquals(new Fraction(-1, 2), inv1.getElement(1, 1)); 
+    }
+
+    @Test
+    void testRankAndConsistencyComplex() {
+        Matrix m = new Matrix(2, 2);
+        m.setElement(0, 0, f1);
+        m.setElement(0, 1, f1);
+        m.setElement(1, 0, f1);
+        m.setElement(1, 1, f1);
+        assertEquals(1, m.getRank());
+        Vector inSpan = new Vector(new Fraction[] {f1.add(f1), f1.add(f1)});
+        Vector notSpan = new Vector(new Fraction[] {f1.add(f1), f1});
+        assertTrue(m.isConsistent(inSpan));
+        assertFalse(m.isConsistent(notSpan));
     }
 
 }
