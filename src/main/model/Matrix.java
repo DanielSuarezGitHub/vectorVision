@@ -335,6 +335,7 @@ public class Matrix {
         return augmented;
     }
 
+    // EFFECTS: creates a new Matrix augmented with the Identity Matrix
     private Matrix augmentIdentity(Matrix m) {
         Matrix augmented = new Matrix(m.getNumRows(), 2 * m.getNumCols());
         for (int i = 0; i < augmented.getNumRows(); i++) {
@@ -350,6 +351,7 @@ public class Matrix {
         return augmented;
     }
 
+    // EFFECT: Returns the string of the series of operations in the log
     public String getLogString() {
         String logString = "";
         for (LogElement i : log) {
@@ -358,11 +360,27 @@ public class Matrix {
         return logString;
     }
 
+    // EFFECT returns the product of the determinant effects from all log operations
     private Fraction getOverallDeterminantEffect() {
         Fraction overAllEffect = new Fraction(1, 1);
         for (LogElement i : log) {
             overAllEffect = overAllEffect.multiply(i.getDeterminantEffect());
         }
         return overAllEffect;
+    }
+
+    //EFFECTS: returns the Tr(this) or trace of this.
+    public Fraction getTrace() {
+        return new Fraction(0, 1);
+    }
+
+    // EFFECTS returns a set of basis for the column space;
+    public Vector[] getColumnBasisVectors() {
+        return null;
+    }
+
+    // EFFECTS returns a set of basis vectors for the row space;
+    public Vector[] getRowBasisVectors() {
+        return null;
     }
 }
