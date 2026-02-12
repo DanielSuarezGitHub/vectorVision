@@ -104,13 +104,14 @@ public class Matrix {
             if (pivotValue.getNumerator() == 0) {
                 continue;
             }
-
-            Fraction scalar = one.divide(pivotValue);
             if (pivotRow != currentRow) {
                 swapRows(pivotRow, currentRow);
             }
 
-            scaleRow(currentRow, scalar);
+            if (!pivotValue.equals(one)) {
+                Fraction scalar = one.divide(pivotValue);
+                scaleRow(currentRow, scalar);
+            }
             elimanateColumn(j, currentRow);
             currentRow++;
         }
