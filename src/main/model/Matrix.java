@@ -153,7 +153,13 @@ public class Matrix {
     // REQUIRES: this.isSquare() == true
     // EFFECTS: returns the determinant of this matrix
     public Fraction getDeterminant() {
-        return null;
+        Matrix copy = this.copy();
+        copy.calculaterref();
+        Fraction diagProduct = new Fraction(1, 1);
+        for (int i = 0; i < rows; i++) {
+            diagProduct = diagProduct.multiply(copy.getElement(i, i));
+        }
+        return diagProduct.divide(copy.getOverallDeterminantEffect());
     }
 
     // REQUIRES: this.isSquare() == true, this.getDeterminant().getNumerator() != 0
@@ -167,7 +173,7 @@ public class Matrix {
             for (int j = cols; j < 2 * cols; j++) {
                 inverse.setElement(i, (j - cols), augmented.getElement(i, j));
             }
-        } 
+        }
         return inverse;
     }
 
@@ -329,10 +335,6 @@ public class Matrix {
         return augmented;
     }
 
-
-
-
-
     private Matrix augmentIdentity(Matrix m) {
         Matrix augmented = new Matrix(m.getNumRows(), 2 * m.getNumCols());
         for (int i = 0; i < augmented.getNumRows(); i++) {
@@ -347,11 +349,20 @@ public class Matrix {
         }
         return augmented;
     }
+
     public String getLogString() {
         String logString = "";
-        for (LogElement i: log) {
+        for (LogElement i : log) {
             logString = logString + i.getString() + "\n";
         }
         return logString;
+    }
+
+    private Fraction getOverallDeterminantEffect() {
+        Fraction overAllEffect = new Fraction(1, 1);
+        for (LogElement i : log) {
+            overAllEffect = overAllEffect.multiply(i.getDeterminantEffect());
+        }
+        return overAllEffect;
     }
 }
