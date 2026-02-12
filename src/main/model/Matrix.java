@@ -159,7 +159,16 @@ public class Matrix {
     // REQUIRES: this.isSquare() == true, this.getDeterminant().getNumerator() != 0
     // EFFECTS: returns a new Matrix that is the inverse (A^-1)
     public Matrix invert() {
-        return null;
+        Matrix augmented = this.copy();
+        augmented = augmentIdentity(augmented);
+        augmented.calculaterref();
+        Matrix inverse = new Matrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = cols; j < 2 * cols; j++) {
+                inverse.setElement(i, (j - cols), augmented.getElement(i, j));
+            }
+        } 
+        return inverse;
     }
 
     // REQUIRES: r1 < rows, r2 < rows
@@ -309,7 +318,7 @@ public class Matrix {
     }
 
     // EFFECTS creates and returns an augmented Matrix version of this
-    public Matrix augment(Vector b) {
+    private Matrix augment(Vector b) {
         Matrix augmented = new Matrix(this.rows, this.cols + 1);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -320,4 +329,22 @@ public class Matrix {
         return augmented;
     }
 
+
+
+
+
+    private Matrix augmentIdentity(Matrix m) {
+        Matrix augmented = new Matrix(m.getNumRows(), 2 * m.getNumCols());
+        for (int i = 0; i < augmented.getNumRows(); i++) {
+            for (int j = 0; j < m.getNumCols(); j++) {
+                augmented.setElement(i, j, m.getElement(i, j));
+            }
+            for (int j = m.getNumCols(); j < augmented.getNumCols(); j++) {
+                if (i == j - m.getNumCols()) {
+                    augmented.setElement(i, j, new Fraction(1, 1));
+                }
+            }
+        }
+        return augmented;
+    }
 }

@@ -243,10 +243,18 @@ public class MatrixTest {
 
         Matrix inv1 = m1.invert();
 
-        assertEquals(new Fraction(-2, 1), inv1.getElement(0, 0));
-        assertEquals(new Fraction(1, 1), inv1.getElement(0, 1));
-        assertEquals(new Fraction(3, 2), inv1.getElement(1, 0)); 
-        assertEquals(new Fraction(-1, 2), inv1.getElement(1, 1)); 
+        assertTrue(new Fraction(-2, 1).equals(inv1.getElement(0, 0)));
+        assertTrue(new Fraction(1, 1).equals(inv1.getElement(0, 1)));
+        assertTrue(new Fraction(3, 2).equals(inv1.getElement(1, 0)));
+        assertTrue(new Fraction(-1, 2).equals(inv1.getElement(1, 1)));
+
+        Matrix identity = inv1.multiply(m1);
+
+        assertEquals(1, identity.getElement(0, 0).getNumerator());
+        assertEquals(0, identity.getElement(0, 1).getNumerator());
+        assertEquals(1, identity.getElement(1, 1).getNumerator());
+        assertEquals(0, identity.getElement(1, 0).getNumerator());
+
     }
 
     @Test
@@ -257,8 +265,8 @@ public class MatrixTest {
         m.setElement(1, 0, f1);
         m.setElement(1, 1, f1);
         assertEquals(1, m.getRank());
-        Vector inSpan = new Vector(new Fraction[] {f1.add(f1), f1.add(f1)});
-        Vector notSpan = new Vector(new Fraction[] {f1.add(f1), f1});
+        Vector inSpan = new Vector(new Fraction[] { f1.add(f1), f1.add(f1) });
+        Vector notSpan = new Vector(new Fraction[] { f1.add(f1), f1 });
         assertTrue(m.isConsistent(inSpan));
         assertFalse(m.isConsistent(notSpan));
     }
