@@ -144,7 +144,14 @@ public class Matrix {
     // EFFECTS returns true of row at index i is contradictory;
     private boolean isRowContradictory(int i) {
         Fraction b = this.data[i][cols - 1];
-        if (isRowAllZeros(i) && b.getNumerator() != 0) {
+        boolean coefficientsAreZero = true;
+        for (int j = 0; j < cols - 1; j++) {
+            if (data[i][j].getNumerator() != 0) {
+                coefficientsAreZero = false;
+                break;
+            }
+        }
+        if (coefficientsAreZero && b.getNumerator() != 0) {
             return true;
         }
         return false;
@@ -370,7 +377,7 @@ public class Matrix {
     }
 
     // REQUIRES: this.isSquare == True
-    //EFFECTS: returns the Tr(this) or trace of this.
+    // EFFECTS: returns the Tr(this) or trace of this.
     public Fraction getTrace() {
         Fraction sum = new Fraction(0, 1);
         for (int i = 0; i < rows; i++) {
@@ -386,7 +393,7 @@ public class Matrix {
         int rank = this.getRank();
         Vector[] basis = new Vector[rank];
         int basisIndex = 0;
-        for (int j = 0;  j < cols; j++) {
+        for (int j = 0; j < cols; j++) {
             if (isColumnPivotrref(m, j)) {
                 basis[basisIndex] = getColumnVector(j);
                 basisIndex++;
@@ -401,7 +408,7 @@ public class Matrix {
     }
 
     // REQUIRES: Matrix m in Row Reduced Echelon Form;
-    //EFFECTS returns true is Column j is a pivot;
+    // EFFECTS returns true is Column j is a pivot;
     private boolean isColumnPivotrref(Matrix m, int j) {
         Fraction sum = new Fraction(0, 1);
         for (int i = 0; i < rows; i++) {
@@ -412,6 +419,6 @@ public class Matrix {
         } else {
             return false;
         }
-        
+
     }
 }

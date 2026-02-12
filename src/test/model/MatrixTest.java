@@ -293,8 +293,8 @@ public class MatrixTest {
         Vector[] colBasis = m2x2.getColumnBasisVectors();
 
         assertNotNull(colBasis);
-        assertEquals(1, colBasis.length); 
-        
+        assertEquals(1, colBasis.length);
+
         assertEquals(1, colBasis[0].getComponent(0).getNumerator());
         assertEquals(2, colBasis[0].getComponent(1).getNumerator());
     }
@@ -310,7 +310,7 @@ public class MatrixTest {
 
         assertNotNull(rowBasis);
         assertEquals(1, rowBasis.length);
-    
+
         assertEquals(1, rowBasis[0].getComponent(0).getNumerator());
         assertEquals(3, rowBasis[0].getComponent(1).getNumerator());
     }
@@ -326,9 +326,42 @@ public class MatrixTest {
 
         assertEquals(3, colBasis.length);
         assertEquals(3, rowBasis.length);
-        
+
         assertEquals(1, colBasis[0].getComponent(0).getNumerator());
         assertEquals(0, colBasis[0].getComponent(1).getNumerator());
         assertEquals(0, colBasis[0].getComponent(2).getNumerator());
+    }
+
+    @Test
+    void testSolveInconsistentContradiction() {
+        Matrix m = new Matrix(2, 2);
+        m.setElement(0, 0, f1);
+        m.setElement(0, 1, f1);
+        m.setElement(1, 0, f1);
+        m.setElement(1, 1, f1);
+
+        Vector b = new Vector(new Fraction[] {
+             new Fraction(2, 1), 
+             new Fraction(3, 1) });
+
+        assertNull(m.solve(b));
+        assertFalse(m.isConsistent(b));
+    }
+
+    @Test
+    void testSolveTallInconsistent() {
+
+        Matrix m = new Matrix(3, 2);
+        m.setElement(0, 0, f1);
+        m.setElement(1, 1, f1);
+        m.setElement(2, 0, f1);
+        m.setElement(2, 1, f1);
+
+        Vector b = new Vector(new Fraction[] {
+                new Fraction(1, 1),
+                new Fraction(1, 1),
+                new Fraction(5, 1)});
+                
+        assertNull(m.solve(b));
     }
 }
