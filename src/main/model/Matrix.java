@@ -369,18 +369,49 @@ public class Matrix {
         return overAllEffect;
     }
 
+    // REQUIRES: this.isSquare == True
     //EFFECTS: returns the Tr(this) or trace of this.
     public Fraction getTrace() {
-        return new Fraction(0, 1);
+        Fraction sum = new Fraction(0, 1);
+        for (int i = 0; i < rows; i++) {
+            sum = sum.add(getElement(i, i));
+        }
+        return sum;
     }
 
     // EFFECTS returns a set of basis for the column space;
     public Vector[] getColumnBasisVectors() {
-        return null;
+        Matrix m = copy();
+        m.calculaterref();
+        int rank = this.getRank();
+        Vector[] basis = new Vector[rank];
+        int basisIndex = 0;
+        for (int j = 0;  j < cols; j++) {
+            if (isColumnPivotrref(m, j)) {
+                basis[basisIndex] = getColumnVector(j);
+                basisIndex++;
+            }
+        }
+        return basis;
     }
 
     // EFFECTS returns a set of basis vectors for the row space;
     public Vector[] getRowBasisVectors() {
-        return null;
+        return this.transpose().getColumnBasisVectors();
+    }
+
+    // REQUIRES: Matrix m in Row Reduced Echelon Form;
+    //EFFECTS returns true is Column j is a pivot;
+    private boolean isColumnPivotrref(Matrix m, int j) {
+        Fraction sum = new Fraction(0, 1);
+        for (int i = 0; i < rows; i++) {
+            sum = sum.add(m.getElement(i, j));
+        }
+        if (sum.equals(new Fraction(1, 1))) {
+            return true;
+        } else {
+            return false;
+        }
+        
     }
 }
