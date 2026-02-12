@@ -271,4 +271,64 @@ public class MatrixTest {
         assertFalse(m.isConsistent(notSpan));
     }
 
+    @Test
+    void testGetTrace() {
+        m2x2.setElement(0, 0, new Fraction(1, 1));
+        m2x2.setElement(1, 1, new Fraction(4, 1));
+        assertEquals(5, m2x2.getTrace().getNumerator());
+
+        m3x3.setElement(0, 0, new Fraction(-10, 1));
+        m3x3.setElement(1, 1, new Fraction(3, 1));
+        m3x3.setElement(2, 2, new Fraction(7, 1));
+        assertEquals(0, m3x3.getTrace().getNumerator());
+    }
+
+    @Test
+    void testGetColumnBasisVectors() {
+        m2x2.setElement(0, 0, f1);
+        m2x2.setElement(0, 1, new Fraction(2, 1));
+        m2x2.setElement(1, 0, new Fraction(2, 1));
+        m2x2.setElement(1, 1, new Fraction(4, 1));
+
+        Vector[] colBasis = m2x2.getColumnBasisVectors();
+
+        assertNotNull(colBasis);
+        assertEquals(1, colBasis.length); 
+        
+        assertEquals(1, colBasis[0].getComponent(0).getNumerator());
+        assertEquals(2, colBasis[0].getComponent(1).getNumerator());
+    }
+
+    @Test
+    void testGetRowBasisVectors() {
+        m2x2.setElement(0, 0, f1);
+        m2x2.setElement(0, 1, new Fraction(3, 1));
+        m2x2.setElement(1, 0, new Fraction(2, 1));
+        m2x2.setElement(1, 1, new Fraction(6, 1));
+
+        Vector[] rowBasis = m2x2.getRowBasisVectors();
+
+        assertNotNull(rowBasis);
+        assertEquals(1, rowBasis.length);
+    
+        assertEquals(1, rowBasis[0].getComponent(0).getNumerator());
+        assertEquals(3, rowBasis[0].getComponent(1).getNumerator());
+    }
+
+    @Test
+    void testBasisForIdentity() {
+        m3x3.setElement(0, 0, f1);
+        m3x3.setElement(1, 1, f1);
+        m3x3.setElement(2, 2, f1);
+
+        Vector[] colBasis = m3x3.getColumnBasisVectors();
+        Vector[] rowBasis = m3x3.getRowBasisVectors();
+
+        assertEquals(3, colBasis.length);
+        assertEquals(3, rowBasis.length);
+        
+        assertEquals(1, colBasis[0].getComponent(0).getNumerator());
+        assertEquals(0, colBasis[0].getComponent(1).getNumerator());
+        assertEquals(0, colBasis[0].getComponent(2).getNumerator());
+    }
 }
