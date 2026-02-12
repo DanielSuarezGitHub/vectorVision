@@ -7,7 +7,7 @@ public class Matrix {
     private Fraction[][] data;
     private int rows;
     private int cols;
-    private List<String> log;
+    private List<LogElement> log;
 
     // REQUIRES: numRows > 0, numCols > 0
     // MODIFIES: this
@@ -16,7 +16,7 @@ public class Matrix {
     public Matrix(int numRows, int numCols) {
         this.rows = numRows;
         this.cols = numCols;
-        this.log = new ArrayList<String>();
+        this.log = new ArrayList<LogElement>();
         this.data = new Fraction[numRows][numCols];
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
@@ -179,7 +179,7 @@ public class Matrix {
         Fraction[] row2 = data[r2];
         data[r2] = row1;
         data[r1] = row2;
-        log.add("R" + r1 + " <-> " + "R" + r2);
+        log.add(new SwapRow(r1, r2));
     }
 
     // REQUIRES: row < rows, scalar != null
@@ -189,7 +189,7 @@ public class Matrix {
         for (int i = 0; i < cols; i++) {
             data[row][i] = data[row][i].multiply(scalar);
         }
-        log.add(scalar.toString() + " * R" + row + " -> R" + row);
+        log.add(new ScaleRow(row, scalar));
     }
 
     // REQUIRES: sourceRow < rows, destRow < rows, scalar != null
@@ -201,7 +201,7 @@ public class Matrix {
             Fraction termToAdd = data[sourceRow][i].multiply(scalar);
             data[destRow][i] = data[destRow][i].add(termToAdd);
         }
-        log.add(scalar.toString() + " * R" + sourceRow + " + R" + destRow + " -> R" + destRow);
+        log.add(new AddRowMultiple(sourceRow, destRow, scalar));
     }
 
     // MODIFIES: this
@@ -244,7 +244,7 @@ public class Matrix {
     }
 
     // EFFECTS: returns the history of row operations performed during RREF
-    public List<String> getLog() {
+    public List<LogElement> getLog() {
         return this.log;
     }
 
@@ -346,5 +346,12 @@ public class Matrix {
             }
         }
         return augmented;
+    }
+    public String getLogString() {
+        String logString = "";
+        for (LogElement i: log) {
+            logString = logString + i.getString() + "\n";
+        }
+        return logString;
     }
 }

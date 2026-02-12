@@ -112,9 +112,9 @@ public class MatrixTest {
         assertEquals(0, m.getElement(0, 1).getNumerator());
         assertEquals(1, m.getElement(1, 1).getNumerator());
 
-        List<String> log = m.getLog();
+        List<LogElement> log = m.getLog();
         assertFalse(log.isEmpty());
-        assertTrue(log.get(0).contains("R"));
+        assertTrue(log.get(0).getString().contains("R"));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class MatrixTest {
         assertEquals(1, m.getElement(0, 0).getNumerator());
         assertEquals(0, m.getElement(0, 1).getNumerator());
 
-        assertTrue(m.getLog().toString().contains("R1 <-> R0"));
+        assertTrue(m.getLogString().contains("R1 <-> R0"));
     }
 
     @Test
@@ -230,7 +230,7 @@ public class MatrixTest {
 
         assertEquals(1, m.getElement(0, 0).getNumerator());
 
-        assertTrue(m.getLog().toString().contains(" * R0 -> R0"));
+        assertTrue(m.getLogString().contains(" * R0 -> R0"));
     }
 
     @Test
