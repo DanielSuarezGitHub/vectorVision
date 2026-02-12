@@ -71,7 +71,20 @@ public class Vector {
     // REQUIRES: V2 != null, this.size() == v2.size() == 3
     // EFFECRS: returns the cross product of this and v2 (R3 Vectors only)
     public Vector cross(Vector v2) {
-        return null;
+        Fraction a1 = this.getComponent(0);
+        Fraction a2 = this.getComponent(1);
+        Fraction a3 = this.getComponent(2);
+
+        Fraction b1 = v2.getComponent(0);
+        Fraction b2 = v2.getComponent(1);
+        Fraction b3 = v2.getComponent(2);
+
+        Fraction resX = a2.multiply(b3).subtract(a3.multiply(b2));
+        Fraction resY = a3.multiply(b1).subtract(a1.multiply(b3));
+        Fraction resZ = a1.multiply(b2).subtract(a2.multiply(b1));
+
+        Fraction[] resultComponents = { resX, resY, resZ };
+        return new Vector(resultComponents);
     }
 
     // EFFECTS: returns the magnitude of this vector as as a double

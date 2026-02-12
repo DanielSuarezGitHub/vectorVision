@@ -122,4 +122,21 @@ public class VectorTest {
         assertEquals("[1/2, -3/4]", vecMessy2D.toString());
     }
 
+    @Test
+    void testCrossProductStandardBasis() {
+        Fraction[] arri = { new Fraction(1, 1), new Fraction(0, 1), new Fraction(0, 1) };
+        Fraction[] arrj = { new Fraction(0, 1), new Fraction(1, 1), new Fraction(0, 1) };
+        Fraction[] zeroArr3D = { new Fraction(0, 1), new Fraction(0, 1), new Fraction(0, 1) };
+        Vector zeroVec3D = new Vector(zeroArr3D);
+        Vector i = new Vector(arri);
+        Vector j = new Vector(arrj);
+
+
+        Vector k = i.cross(j);
+        assertTrue(vecStandard3D.cross(vecStandard3D).equals(zeroVec3D));
+        assertEquals(0, k.getComponent(0).getNumerator());
+        assertEquals(0, k.getComponent(1).getNumerator());
+        assertEquals(1, k.getComponent(2).getNumerator());
+    }
+
 }
