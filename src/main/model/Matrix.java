@@ -304,7 +304,6 @@ public class Matrix {
     // EFFECTS: performs the row operations to eleminate above and below a pivot
     // value;
     private void elimanateColumn(int j, int pivotRow) {
-        Fraction pivotValue = getElement(pivotRow, j);
         for (int i = 0; i < this.getNumRows(); i++) {
             if (i == pivotRow) {
                 continue;

@@ -14,12 +14,10 @@ public class MatrixTest {
     private Matrix m2x2;
     private Matrix m3x3;
     private Fraction f1;
-    private Fraction f0;
 
     @BeforeEach
     void runBefore() {
         f1 = new Fraction(1, 1);
-        f0 = new Fraction(0, 1);
 
         m2x2 = new Matrix(2, 2);
         m3x3 = new Matrix(3, 3);
@@ -361,7 +359,7 @@ public class MatrixTest {
                 new Fraction(1, 1),
                 new Fraction(1, 1),
                 new Fraction(5, 1)});
-                
+
         assertNull(m.solve(b));
     }
 }
