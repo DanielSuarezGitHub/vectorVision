@@ -2,24 +2,22 @@ package model;
 
 import java.lang.Math;
 
+// Represents a rational number (fraction) with a numerator and denominator.
 public class Fraction {
-
-    // Represents a rational number (fraction) with a numerator and denominator.
-
     private long numerator;
     private long denominator;
 
     // REQUIRES: denominator != 0
     // EFFECTS: constructs a fraction with given numerator and denominator;
-    // fraction is reduced to simplest form and denominator is made positive.
+    // Fraction is reduced to simplest form and denominator is made positive.
     public Fraction(long numerator, long denominator) {
-        this.numerator = numerator;
-        this.denominator = denominator;
+        this.numerator = numerator;         // the numerator of the fraction
+        this.denominator = denominator;    // the denominator of the fraction
         this.simplify();
     }
 
     // REQUIRES: f2 != null
-    // EFFECTS: returns a new fraction that is the sum of this and f2
+    // EFFECTS: returns a new Fraction that is the sum of this and f2
     public Fraction add(Fraction f2) {
         long commonDivisor = gcd(this.getDenominator(), f2.getDenominator());
         long commonDenominator = (this.getDenominator() * f2.getDenominator()) / commonDivisor;
@@ -30,7 +28,7 @@ public class Fraction {
     }
 
     // REQUIRES: f2 != null
-    // EFFECTS: returns a new fraction that is the difference of this and f2
+    // EFFECTS: returns a new Fraction that is the difference of this and f2
     public Fraction subtract(Fraction f2) {
         long commonDivisor = gcd(this.getDenominator(), f2.getDenominator());
         long commonDenominator = (this.getDenominator() * f2.getDenominator()) / commonDivisor;
@@ -41,7 +39,7 @@ public class Fraction {
     }
 
     // REQUIRES: f2 != null
-    // EFFECTS: returns a new fraction that is the product of this and f2
+    // EFFECTS: returns a new Fraction that is the product of this and f2
     public Fraction multiply(Fraction f2) {
         long newNumerator = this.getNumerator() * f2.getNumerator();
         long newDenominator = this.getDenominator() * f2.getDenominator();
@@ -49,7 +47,7 @@ public class Fraction {
     }
 
     // REQUIRES: f2 != null, f2.getNumerator() != 0
-    // EFFECTS: returns a new fraction that is the quotient of this divided by f2
+    // EFFECTS: returns a new Fraction that is the quotient of this divided by f2
     public Fraction divide(Fraction f2) {
         long newNumerator = this.getNumerator() * f2.getDenominator();
         long newDenominator = this.getDenominator() * f2.getNumerator();
@@ -101,8 +99,7 @@ public class Fraction {
     }
 
     // REQUIRES: f2 != null
-    // EFFECTS: returns true if this fraction and f2 represent the same rational
-    // value
+    // EFFECTS: returns true if this fraction and f2 represent the same rational value
     public boolean equals(Fraction f2) {
         if (this.getNumerator() == f2.getNumerator() && this.getDenominator() == f2.getDenominator()) {
             return true;

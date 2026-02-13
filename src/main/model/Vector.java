@@ -2,12 +2,13 @@ package model;
 
 import java.util.Arrays;
 
+// Represents a vector composed of Fraction components
 public class Vector {
-    private Fraction[] components;
-    private int size;
+    private Fraction[] components; // the compononents of the vector
+    private int size;             // the dimension of the vector
 
     // REQUIRES: components != null, components.length > 0;
-    // EFFECTS constructs a vector with the given fraction components
+    // EFFECTS: constructs a Vector with the given fraction components
     public Vector(Fraction[] components) {
         this.size = components.length;
         this.components = Arrays.copyOf(components, components.length);
@@ -42,7 +43,7 @@ public class Vector {
     }
 
     // REQUIRES: scalar != null
-    // EFFECTS: returns a new Vector where each component is multiplied bt scalar
+    // EFFECTS: returns a new Vector where each component is multiplied by scalar
     public Vector scalarMultiply(Fraction scalar) {
         int length = size();
         Fraction[] resultComponents = new Fraction[length];
@@ -54,7 +55,7 @@ public class Vector {
         return new Vector(resultComponents);
     }
 
-    // REQUIRES: V2 != null, this.size() == v2.size()
+    // REQUIRES: v2 != null, this.size() == v2.size()
     // EFFECTS: returns the dot product of this vector and v2
     public Fraction dot(Vector v2) {
         int length = size();
@@ -68,8 +69,8 @@ public class Vector {
         return sum;
     }
 
-    // REQUIRES: V2 != null, this.size() == v2.size() == 3
-    // EFFECRS: returns the cross product of this and v2 (R3 Vectors only)
+    // REQUIRES: v2 != null, size() == 3, v2.size() == 3
+    // EFFECTS: returns a new Vector that is the cross product of this and v2
     public Vector cross(Vector v2) {
         Fraction a1 = this.getComponent(0);
         Fraction a2 = this.getComponent(1);
@@ -98,8 +99,8 @@ public class Vector {
         return Math.sqrt(squaredSum.toDecimal());
     }
 
-    // REQUIRES: this.getMagnitude() != 0
-    // EFFECTS: returns a new Vector with a magnitude of 1 in the same direction
+    // REQUIRES: getMagnitude() != 0
+    // EFFECTS: returns a new Vector with a magnitude of 1 in the same direction as this
     public Vector normalize() {
         double mag = getMagnitude();
         Fraction[] unitComponents = new Fraction[size()];
@@ -130,8 +131,7 @@ public class Vector {
     }
 
     // REQUIRES: v2 != null
-    // EFFECTS: returns true if this vector and the other have the same size and
-    // identical components
+    // EFFECTS: returns true if this vector and the other have the same size and identical components
     public boolean equals(Vector v2) {
         int length = size();
         if (length != v2.size()) {
@@ -145,8 +145,7 @@ public class Vector {
         return true;
     }
 
-    // EFFECTS: returns a string representation of the fraction example "[1/2, 2/3,
-    // -1/1]"
+    // EFFECTS: returns a string representation of the fraction example "[1/2, 2/3, -1/1]"
     public String toString() {
         String strVector = "[";
         int length = size();

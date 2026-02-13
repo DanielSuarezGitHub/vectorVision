@@ -25,7 +25,7 @@ public class MatrixTest {
 
     @Test
     void testConstructorAndGetSet() {
-        assertTrue(m2x2.isSquare());
+        assertEquals(true, m2x2.isSquare());
         m2x2.setElement(0, 1, new Fraction(5, 1));
         assertEquals(5, m2x2.getElement(0, 1).getNumerator());
         assertEquals(0, m2x2.getElement(0, 0).getNumerator());
@@ -361,5 +361,19 @@ public class MatrixTest {
                 new Fraction(5, 1)});
 
         assertNull(m.solve(b));
+    }
+    
+    @Test
+    public void testGetLogStringWithAddRowMultiple() {
+        Matrix m = new Matrix(2, 2);
+        m.setElement(0, 0, new Fraction(1, 1));
+        m.setElement(0, 1, new Fraction(0, 1));
+
+        m.setElement(1, 0, new Fraction(2, 1));
+        m.setElement(1, 1, new Fraction(1, 1));
+        m.calculaterref();
+        assertTrue(m.getLogString().contains("+")); 
+        assertEquals(1, m.getElement(0, 0).getNumerator());
+        assertEquals(0, m.getElement(1, 0).getNumerator());
     }
 }

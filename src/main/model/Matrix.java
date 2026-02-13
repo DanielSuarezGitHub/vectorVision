@@ -3,16 +3,16 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents a matrix of Fractions with defined rows and columns and a log of operations
 public class Matrix {
-    private Fraction[][] data;
-    private int rows;
-    private int cols;
-    private List<LogElement> log;
+    private Fraction[][] data;       // 2D array storing matrix elements
+    private int rows;                // number of rows
+    private int cols;                // number of columns
+    private List<LogElement> log;    // history of row operations performed
 
     // REQUIRES: numRows > 0, numCols > 0
     // MODIFIES: this
-    // EFFECTS: constructs a matrix with given dimensions; all entries initialized
-    // to 0
+    // EFFECTS: constructs a matrix with given dimensions; all entries initialized to 0
     public Matrix(int numRows, int numCols) {
         this.rows = numRows;
         this.cols = numCols;
@@ -25,25 +25,25 @@ public class Matrix {
         }
     }
 
-    // REQUIRES: row < rows, col < cols
+    // REQUIRES: row >= 0, row < getNumRows(), col >= 0, col < getNumCols(), f != null
     // MODIFIES: this
     // EFFECTS: sets the element at [row][col] to f
     public void setElement(int row, int col, Fraction f) {
         data[row][col] = f;
     }
 
-    // REQUIRES: row < rows, col < cols
+    // REQUIRES: row >= 0, row < getNumRows(), col >= 0, col < getNumCols()
     // EFFECTS: returns the Fraction at [row][col]
     public Fraction getElement(int row, int col) {
         return data[row][col];
     }
 
-    // REQUIRES: m2 != null, this.rows == m2.rows, this.cols == m2.cols
+    // REQUIRES: m2 != null, getNumRows() == m2.getNumRows(), getNumCols() == m2.getNumCols()
     // EFFECTS: returns a new Matrix that is the sum of this and m2
     public Matrix add(Matrix m2) {
-        Matrix m3 = new Matrix(rows, cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
+        Matrix m3 = new Matrix(getNumRows(), getNumCols());
+        for (int i = 0; i < getNumRows(); i++) {
+            for (int j = 0; j < getNumCols(); j++) {
                 Fraction sum = getElement(i, j).add(m2.getElement(i, j));
                 m3.setElement(i, j, sum);
             }
@@ -51,10 +51,10 @@ public class Matrix {
         return m3;
     }
 
-    // REQUIRES: m2 != null, this.cols == m2.rows
+    // REQUIRES: m2 != null, getNumCols() == m2.getNumRows()
     // EFFECTS: returns a new Matrix that is the product (this * m2)
     public Matrix multiply(Matrix m2) {
-        Matrix m3 = new Matrix(this.getNumRows(), m2.getNumCols());
+        Matrix m3 = new Matrix(getNumRows(), m2.getNumCols());
         for (int i = 0; i < m3.getNumRows(); i++) {
             Vector aik = this.getRowVector(i);
             for (int j = 0; j < m3.getNumCols(); j++) {
@@ -66,8 +66,8 @@ public class Matrix {
         return m3;
     }
 
-    // REQUIRES: v != null, this.cols == v.size()
-    // EFFECTS: returns a new Vector that is the result of (this * v)
+    // REQUIRES: v != null, getNumCols() == v.size()
+    // EFFECTS: returns a new Vector that is the result of the transformation (this * v)
     public Vector multiplyVector(Vector v) {
         Fraction[] resultComponents = new Fraction[this.rows];
         for (int i = 0; i < this.rows; i++) {
@@ -89,9 +89,9 @@ public class Matrix {
         return m2;
     }
 
-    // MODIFIES: this, log
-    // EFFECTS: transforms matrix into Reduced Row Echelon Form;
-    // records standard row operations in log
+    // MODIFIES: this
+    // EFFECTS: transforms matrix into Reduced Row Echelon Form
+    // records operations in log
     public void calculaterref() {
         Fraction one = new Fraction(1, 1);
 
@@ -117,8 +117,8 @@ public class Matrix {
         }
     }
 
-    // REQUIRES: b != null, b.size() == this.rows
-    // EFFECTS: returns the unique solution vector x for Ax=b;
+    // REQUIRES: b != null, b.size() == getNumRows()
+    // EFFECTS: returns the unique solution vector x for Ax=b
     // returns null if the system is inconsistent or has infinite solutions
     public Vector solve(Vector b) {
         Matrix augmented = augment(b);
@@ -133,19 +133,19 @@ public class Matrix {
             return null;
         }
 
-        Fraction[] solution = new Fraction[this.cols];
-        for (int i = 0; i < this.cols; i++) {
-            solution[i] = augmented.getElement(i, this.cols);
+        Fraction[] solution = new Fraction[getNumCols()];
+        for (int i = 0; i < getNumCols(); i++) {
+            solution[i] = augmented.getElement(i, getNumCols());
         }
         return new Vector(solution);
     }
 
-    // REQUIRES: this must be augmented and in RREF;
-    // EFFECTS returns true of row at index i is contradictory;
+    // REQUIRES: this matrix is augmented and in RREF, i >= 0, i < getNumRows()
+    // EFFECTS: returns true if row i represents a contradiction example [0 0 ... 0 | non-zero] 
     private boolean isRowContradictory(int i) {
-        Fraction b = this.data[i][cols - 1];
+        Fraction b = this.data[i][getNumCols() - 1];
         boolean coefficientsAreZero = true;
-        for (int j = 0; j < cols - 1; j++) {
+        for (int j = 0; j < getNumCols() - 1; j++) {
             if (data[i][j].getNumerator() != 0) {
                 coefficientsAreZero = false;
                 break;
@@ -175,18 +175,18 @@ public class Matrix {
         Matrix augmented = this.copy();
         augmented = augmentIdentity(augmented);
         augmented.calculaterref();
-        Matrix inverse = new Matrix(rows, cols);
+        Matrix inverse = new Matrix(getNumRows(), getNumCols());
         for (int i = 0; i < rows; i++) {
-            for (int j = cols; j < 2 * cols; j++) {
-                inverse.setElement(i, (j - cols), augmented.getElement(i, j));
+            for (int j = getNumCols(); j < 2 * getNumCols(); j++) {
+                inverse.setElement(i, (j - getNumCols()), augmented.getElement(i, j));
             }
         }
         return inverse;
     }
 
-    // REQUIRES: r1 < rows, r2 < rows
+    // REQUIRES: r1 >= 0, r1 < getNumRows(), r2 >= 0, r2 < getNumRows()
     // MODIFIES: this
-    // EFFECTS: swaps row r1 and r2; adds "R[r1] <-> R[r2]" to log
+    // EFFECTS: swaps row r1 and r2; adds operation to log
     private void swapRows(int r1, int r2) {
         Fraction[] row1 = data[r1];
         Fraction[] row2 = data[r2];
@@ -195,9 +195,9 @@ public class Matrix {
         log.add(new SwapRow(r1, r2));
     }
 
-    // REQUIRES: row < rows, scalar != null
+    // REQUIRES: row >= 0, row < getNumRows(), scalar != null
     // MODIFIES: this
-    // EFFECTS: multiplies row by scalar; adds "[scalar] * R[row] -> R[row]" to log
+    // EFFECTS: multiplies row by scalar; adds operation to log
     private void scaleRow(int row, Fraction scalar) {
         for (int i = 0; i < cols; i++) {
             data[row][i] = data[row][i].multiply(scalar);
@@ -205,10 +205,9 @@ public class Matrix {
         log.add(new ScaleRow(row, scalar));
     }
 
-    // REQUIRES: sourceRow < rows, destRow < rows, scalar != null
+    // REQUIRES: sourceRow >= 0, sourceRow < getNumRows(), destRow >= 0, destRow < getNumRows(), scalar != null
     // MODIFIES: this
-    // EFFECTS: adds (scalar * sourceRow) to destRow;
-    // adds "[scalar] * R[sourceRow] + R[destRow] -> R[destRow]" to log
+    // EFFECTS: adds (scalar * sourceRow) to destRow; adds operation to log
     private void addRowMultiple(int sourceRow, int destRow, Fraction scalar) {
         for (int i = 0; i < cols; i++) {
             Fraction termToAdd = data[sourceRow][i].multiply(scalar);
@@ -217,8 +216,7 @@ public class Matrix {
         log.add(new AddRowMultiple(sourceRow, destRow, scalar));
     }
 
-    // MODIFIES: this
-    // EFFECTS: Returns Matrix rank,
+    // EFFECTS: returns the rank of the matrix
     public int getRank() {
         Matrix temp = this.copy();
         temp.calculaterref();
@@ -231,9 +229,10 @@ public class Matrix {
         return rank;
     }
 
+    // REQUIRES: rowIndex >= 0, rowIndex < getNumRows()
     // EFFECTS: returns true if every element in the specified row is zero
     private boolean isRowAllZeros(int rowIndex) {
-        for (int j = 0; j < cols; j++) {
+        for (int j = 0; j < getNumCols(); j++) {
             if (data[rowIndex][j].getNumerator() != 0) {
                 return false;
             }
@@ -241,6 +240,7 @@ public class Matrix {
         return true;
     }
 
+    // REQUIRES: b != null, b.size() == getNumRows()
     // EFFECTS: returns true if the system Ax = b has at least one solution
     public boolean isConsistent(Vector b) {
         int rankA = this.getRank();
@@ -251,22 +251,24 @@ public class Matrix {
         return rankA == rankAugmented;
     }
 
-    // EFFECTS: returns true if rows == cols
+    // EFFECTS: returns true if number of rows equals number of columns
     public boolean isSquare() {
-        return rows == cols;
+     return cols == rows;
     }
 
-    // EFFECTS: returns the history of row operations performed during RREF
+    // EFFECTS: returns the history (list) of row operations performed during RREF
     public List<LogElement> getLog() {
         return this.log;
     }
 
-    // EFFECTS: Returns the ith row as a Vector
+    // REQUIRES: rowIndex >= 0, rowIndex < getNumRows()
+    // EFFECTS: returns the row at rowIndex as a Vector
     private Vector getRowVector(int rowIndex) {
         return new Vector(data[rowIndex]);
     }
 
-    // EFFECTS: Returns the j-th column as a Vector
+    // REQUIRES: colIndex >= 0, colIndex < getNumCols()
+    // EFFECTS: returns the column at colIndex as a Vector
     private Vector getColumnVector(int colIndex) {
         Fraction[] colData = new Fraction[rows];
         for (int i = 0; i < rows; i++) {
@@ -274,18 +276,18 @@ public class Matrix {
         }
         return new Vector(colData);
     }
-
+    // EFFECTS: returns number of rows  in this Matrix.
     public int getNumRows() {
         return rows;
     }
 
+    // EFFECTS: returns number of columns in this Matrix.
     public int getNumCols() {
         return cols;
     }
 
-    // REQUIRES: col < cols, startRow < rows
-    // EFFECTS: returns the index of the row with the largest absolute value in col
-    // j starting from search row;
+    // REQUIRES: col >= 0, col < getNumCols(), startRow >= 0, startRow < getNumRows()
+    // EFFECTS: returns index of row with largest absolute value in column col, searching from startRow downwards
     private int findPivotRow(int col, int startRow) {
         int maxRow = startRow;
         double maxVal = Math.abs(data[startRow][col].toDecimal());
@@ -299,10 +301,9 @@ public class Matrix {
         return maxRow;
     }
 
-    // REQUIRES: j < cols, pivotRow < rows, getElement(pivotRow, j) == 1;
+    // REQUIRES: j >= 0, j < getNumCols(), pivotRow >= 0, pivotRow < getNumRows(), getElement(pivotRow, j) == 1
     // MODIFIES: this
-    // EFFECTS: performs the row operations to eleminate above and below a pivot
-    // value;
+    // EFFECTS: performs row operations to eliminate values above and below the pivot at 
     private void elimanateColumn(int j, int pivotRow) {
         for (int i = 0; i < this.getNumRows(); i++) {
             if (i == pivotRow) {
@@ -318,7 +319,7 @@ public class Matrix {
         }
     }
 
-    // EFFECTS: returns a copy of this matrix
+    // EFFECTS: returns a new Matrix that is a copy of this.
     public Matrix copy() {
         Matrix copy = new Matrix(this.rows, this.cols);
         for (int i = 0; i < rows; i++) {
@@ -329,7 +330,8 @@ public class Matrix {
         return copy;
     }
 
-    // EFFECTS creates and returns an augmented Matrix version of this
+    // REQUIRES: b != null, b.size() == getNumRows()
+    // EFFECTS: returns a new Matrix augmented with vector b as the last column
     private Matrix augment(Vector b) {
         Matrix augmented = new Matrix(this.rows, this.cols + 1);
         for (int i = 0; i < rows; i++) {
@@ -341,7 +343,8 @@ public class Matrix {
         return augmented;
     }
 
-    // EFFECTS: creates a new Matrix augmented with the Identity Matrix
+    // REQUIRES: m != null
+    // EFFECTS: returns a new Matrix consisting of m augmented with the identity matrix
     private Matrix augmentIdentity(Matrix m) {
         Matrix augmented = new Matrix(m.getNumRows(), 2 * m.getNumCols());
         for (int i = 0; i < augmented.getNumRows(); i++) {
@@ -357,7 +360,7 @@ public class Matrix {
         return augmented;
     }
 
-    // EFFECT: Returns the string of the series of operations in the log
+    // EFFECTS: returns a string representation of all operations in the log
     public String getLogString() {
         String logString = "";
         for (LogElement i : log) {
@@ -366,7 +369,7 @@ public class Matrix {
         return logString;
     }
 
-    // EFFECT returns the product of the determinant effects from all log operations
+    // EFFECTS: returns the product of determinant effects from all logged operations
     private Fraction getOverallDeterminantEffect() {
         Fraction overAllEffect = new Fraction(1, 1);
         for (LogElement i : log) {
@@ -375,8 +378,8 @@ public class Matrix {
         return overAllEffect;
     }
 
-    // REQUIRES: this.isSquare == True
-    // EFFECTS: returns the Tr(this) or trace of this.
+    // REQUIRES: isSquare() == true
+    // EFFECTS: returns the trace  of this matrix.
     public Fraction getTrace() {
         Fraction sum = new Fraction(0, 1);
         for (int i = 0; i < rows; i++) {
@@ -385,7 +388,7 @@ public class Matrix {
         return sum;
     }
 
-    // EFFECTS returns a set of basis for the column space;
+    // EFFECTS: returns an array of Vectors forming a basis for the column space
     public Vector[] getColumnBasisVectors() {
         Matrix m = copy();
         m.calculaterref();
@@ -401,13 +404,13 @@ public class Matrix {
         return basis;
     }
 
-    // EFFECTS returns a set of basis vectors for the row space;
+    // EFFECTS: returns an array of Vectors forming a basis for the row space
     public Vector[] getRowBasisVectors() {
         return this.transpose().getColumnBasisVectors();
     }
 
-    // REQUIRES: Matrix m in Row Reduced Echelon Form;
-    // EFFECTS returns true is Column j is a pivot;
+    // REQUIRES: m is in Row Reduced Echelon Form, j >= 0, j < m.getNumCols()
+    // EFFECTS: returns true if column j contains a pivot
     private boolean isColumnPivotrref(Matrix m, int j) {
         Fraction sum = new Fraction(0, 1);
         for (int i = 0; i < rows; i++) {
