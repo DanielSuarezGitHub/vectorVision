@@ -339,8 +339,8 @@ public class MatrixTest {
         m.setElement(1, 1, f1);
 
         Vector b = new Vector(new Fraction[] {
-             new Fraction(2, 1), 
-             new Fraction(3, 1) });
+                new Fraction(2, 1),
+                new Fraction(3, 1) });
 
         assertNull(m.solve(b));
         assertFalse(m.isConsistent(b));
@@ -358,11 +358,11 @@ public class MatrixTest {
         Vector b = new Vector(new Fraction[] {
                 new Fraction(1, 1),
                 new Fraction(1, 1),
-                new Fraction(5, 1)});
+                new Fraction(5, 1) });
 
         assertNull(m.solve(b));
     }
-    
+
     @Test
     public void testGetLogStringWithAddRowMultiple() {
         Matrix m = new Matrix(2, 2);
@@ -372,8 +372,17 @@ public class MatrixTest {
         m.setElement(1, 0, new Fraction(2, 1));
         m.setElement(1, 1, new Fraction(1, 1));
         m.calculaterref();
-        assertTrue(m.getLogString().contains("+")); 
+        assertTrue(m.getLogString().contains("+"));
         assertEquals(1, m.getElement(0, 0).getNumerator());
         assertEquals(0, m.getElement(1, 0).getNumerator());
+    }
+
+    @Test
+    public void testIsSquare() {
+        Matrix squareM = new Matrix(2, 2);
+        assertTrue(squareM.isSquare());
+
+        Matrix rectM = new Matrix(2, 3);
+        assertFalse(rectM.isSquare());
     }
 }
