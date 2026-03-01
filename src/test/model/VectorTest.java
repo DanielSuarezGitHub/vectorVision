@@ -2,6 +2,10 @@ package model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -137,6 +141,26 @@ public class VectorTest {
         assertEquals(0, k.getComponent(0).getNumerator());
         assertEquals(0, k.getComponent(1).getNumerator());
         assertEquals(1, k.getComponent(2).getNumerator());
+    }
+
+    @Test
+    void testToJson() {
+        Fraction f1 = new Fraction(3, 4);
+        Fraction f2 = new Fraction(-1, 2);
+        Fraction[] arr = {f1, f2};
+        Vector v = new Vector(arr);
+        JSONObject json = v.toJson();
+
+        JSONArray jsonArray = json.getJSONArray("components");
+        assertEquals(2, jsonArray.length());
+
+        JSONObject firstFractionJson = jsonArray.getJSONObject(0);
+        assertEquals(3, firstFractionJson.getLong("numerator"));
+        assertEquals(4, firstFractionJson.getLong("denominator"));
+
+        JSONObject secondFractionJson = jsonArray.getJSONObject(1);
+        assertEquals(-1, secondFractionJson.getLong("numerator"));
+        assertEquals(2, secondFractionJson.getLong("denominator"));
     }
 
 }
