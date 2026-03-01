@@ -3,6 +3,7 @@ package model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import persistence.Writable;
@@ -78,7 +79,28 @@ public class Workspace implements Writable {
     // EFFECTS: returns this workspace as a JSON object
     @Override
     public JSONObject toJson() {
-        return null;
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+
+        JSONArray matricesArray = new JSONArray();
+        for (String key : matrices.keySet()) {
+            JSONObject matrixEntry = new JSONObject();
+            matrixEntry.put("name", key);
+            matrixEntry.put("matrix", matrices.get(key).toJson());
+            matricesArray.put(matrixEntry);
+        }
+        json.put("matrices", matricesArray);
+
+        JSONArray vectorsArray = new JSONArray();
+        for (String key : vectors.keySet()) {
+            JSONObject vectorEntry = new JSONObject();
+            vectorEntry.put("name", key); 
+            vectorEntry.put("vector", vectors.get(key).toJson()); 
+            vectorsArray.put(vectorEntry);
+        }
+        json.put("vectors", vectorsArray);
+
+        return json;
     }
 
 }
