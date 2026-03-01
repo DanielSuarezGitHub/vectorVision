@@ -1,0 +1,55 @@
+{
+    "name": "General Test Workspace",
+    "matrices": [
+        {
+            "name": "Mat1",
+            "matrix": {
+                "rows": 2,
+                "cols": 2,
+                "data": [
+                    {
+                        "components": [
+                            {
+                                "numerator": 1,
+                                "denominator": 1
+                            },
+                            {
+                                "numerator": 0,
+                                "denominator": 1
+                            }
+                        ]
+                    },
+                    {
+                        "components": [
+                            {
+                                "numerator": 0,
+                                "denominator": 1
+                            },
+                            {
+                                "numerator": 1,
+                                "denominator": 1
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "vectors": [
+        {
+            "name": "Vec1",
+            "vector": {
+                "components": [
+                    {
+                        "numerator": 3,
+                        "denominator": 1
+                    },
+                    {
+                        "numerator": 4,
+                        "denominator": 1
+                    }
+                ]
+            }
+        }
+    ]
+}
