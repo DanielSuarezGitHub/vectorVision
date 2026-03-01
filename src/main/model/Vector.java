@@ -2,6 +2,7 @@ package model;
 
 import java.util.Arrays;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import persistence.Writable;
@@ -160,10 +161,20 @@ public class Vector implements Writable {
         return strVector;
     }
 
+    // EFFECTS: returns this vector as a JSON object containing a JSON array of its fractions
     @Override
     public JSONObject toJson() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toJson'");
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (int i = 0; i < size(); i++) {
+            Fraction f = getComponent(i);
+            jsonArray.put(f.toJson());
+        }
+
+        json.put("components", jsonArray);
+        return json;
+
     }
 
 }

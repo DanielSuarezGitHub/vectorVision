@@ -158,6 +158,7 @@ public class VectorTest {
         assertEquals(3, firstFractionJson.getLong("numerator"));
         assertEquals(4, firstFractionJson.getLong("denominator"));
 
+
         JSONObject secondFractionJson = jsonArray.getJSONObject(1);
         assertEquals(-1, secondFractionJson.getLong("numerator"));
         assertEquals(2, secondFractionJson.getLong("denominator"));
