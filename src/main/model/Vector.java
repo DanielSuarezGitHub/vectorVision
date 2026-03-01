@@ -2,8 +2,12 @@ package model;
 
 import java.util.Arrays;
 
+import org.json.JSONObject;
+
+import persistence.Writable;
+
 // Represents a vector composed of Fraction components
-public class Vector {
+public class Vector implements Writable {
     private Fraction[] components; // the compononents of the vector
     private int size;             // the dimension of the vector
 
@@ -154,6 +158,12 @@ public class Vector {
         }
         strVector = strVector.substring(0, strVector.length() - 2) + ']';
         return strVector;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'toJson'");
     }
 
 }
