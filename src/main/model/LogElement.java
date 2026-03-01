@@ -1,5 +1,6 @@
 package model;
 
+// Represents a log of a row operation.
 public interface LogElement {
     
     // EFFECTS: returns the multiplicative effect this operation has on the determinant

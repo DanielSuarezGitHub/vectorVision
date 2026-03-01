@@ -1,0 +1,45 @@
+{
+    "vectors": [{
+        "name": "b",
+        "vector": {"components": [
+            {
+                "numerator": 5,
+                "denominator": 1
+            },
+            {
+                "numerator": 6,
+                "denominator": 1
+            }
+        ]}
+    }],
+    "name": "My Workspace",
+    "matrices": [{
+        "name": "a",
+        "matrix": {
+            "data": [
+                {"components": [
+                    {
+                        "numerator": 1,
+                        "denominator": 1
+                    },
+                    {
+                        "numerator": 1,
+                        "denominator": 1
+                    }
+                ]},
+                {"components": [
+                    {
+                        "numerator": 1,
+                        "denominator": 1
+                    },
+                    {
+                        "numerator": 1,
+                        "denominator": 1
+                    }
+                ]}
+            ],
+            "rows": 2,
+            "cols": 2
+        }
+    }]
+}

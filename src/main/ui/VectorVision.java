@@ -1,22 +1,29 @@
 package ui;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import model.Fraction;
 import model.Vector;
+import model.Workspace;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 import model.Matrix;
 import java.util.Scanner;
 
 public class VectorVision {
-    private Map<String, Matrix> matrices;
-    private Map<String, Vector> vectors;
+    private static final String JSON_STORE = "./data/workspace.json";
+    private Workspace workspace;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
     private Scanner input;
 
-    // EFFECTS: Initializes the application with empty storage and starts the main loop
+    // EFFECTS: Initializes the application with empty storage and starts the main
+    // loop
     public VectorVision() {
-        matrices = new HashMap<String, Matrix>();
-        vectors = new HashMap<String, Vector>();
+        workspace = new Workspace("My Workspace");
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         input = new Scanner(System.in);
         input.useDelimiter("\r?\n|\r");
         runApp();
@@ -52,6 +59,12 @@ public class VectorVision {
             openWorkSpace();
         } else if (command.equals("r")) {
             openRemoveItem();
+        } else if (command.equals("s")) { // NEW
+            saveWorkspace();
+        } else if (command.equals("l")) { // NEW
+            loadWorkspace();
+        } else {
+            System.out.println("Invalid selection.");
         }
     }
 
@@ -62,11 +75,14 @@ public class VectorVision {
         System.out.println("\tv -> Vector Operations");
         System.out.println("\tw -> View Workspace");
         System.out.println("\tr -> Remove Item");
+        System.out.println("\ts -> Save Workspace to file");
+        System.out.println("\tl -> Load Workspace from file");
         System.out.println("\tq -> Quit");
     }
 
-// MODIFIES: this
+    // MODIFIES: this
     // EFFECTS: displays the matrix menu and processes matrix related commands
+    @SuppressWarnings("methodlength")
     private void openMatrixMenu() {
         boolean back = false;
         while (!back) {
@@ -123,6 +139,7 @@ public class VectorVision {
 
     // MODIFIES: this
     // EFFECTS: displays the vector menu and processes vector related commands
+    @SuppressWarnings("methodlength")
     private void openVectorMenu() {
         boolean back = false;
         while (!back) {
@@ -168,22 +185,22 @@ public class VectorVision {
         }
     }
 
-    // MODIFIES: this 
+    // MODIFIES: this
     // EFFECTS: prints the list of all stored matrices and vectors to the console
     private void openWorkSpace() {
         boolean back = false;
-        if (matrices.isEmpty() && vectors.isEmpty()) {
+        if (workspace.getMatrices().isEmpty() && workspace.getVectors().isEmpty()) {
             System.out.println("Workspace is empty. \n");
             return;
         }
         System.out.println("\t Your Current Matrices");
-        for (String name : matrices.keySet()) {
-            Matrix m = matrices.get(name);
+        for (String name : workspace.getMatrices().keySet()) {
+            Matrix m = workspace.getMatrices().get(name);
             System.out.println("[Matrix] " + name + " (" + m.getNumRows() + "x" + m.getNumCols() + ")");
         }
         System.out.println("Your Current Vectors");
-        for (String name : vectors.keySet()) {
-            Vector v = vectors.get(name);
+        for (String name : workspace.getVectors().keySet()) {
+            Vector v = workspace.getVectors().get(name);
             System.out.println("[Vector] " + name + " (Size: " + v.size() + ") " + v.toString());
         }
         System.out.println("b -> Back to Main Menu");
@@ -198,13 +215,14 @@ public class VectorVision {
     }
 
     // MODIFIES: this
-    // EFFECTS: removes a matrix or vector specified by name; prints error if not found
+    // EFFECTS: removes a matrix or vector specified by name; prints error if not
+    // found
     public void openRemoveItem() {
         System.out.print("name to remove: ");
         String name = input.next();
-        if (matrices.remove(name) != null) {
+        if (workspace.getMatrices().remove(name) != null) {
             System.out.println("Removed Matrix " + name + "\n");
-        } else if (vectors.remove(name) != null) {
+        } else if (workspace.getVectors().remove(name) != null) {
             System.out.println("Removed Vector " + name + "/n");
         } else {
             System.out.println("Not found. \n");
@@ -212,11 +230,12 @@ public class VectorVision {
     }
 
     // MODIFIES: this
-    // EFFECTS: prompts user for vector details and adds a new vector to the workspace
+    // EFFECTS: prompts user for vector details and adds a new vector to the
+    // workspace
     public void readVector() {
         System.out.print("Name of your vector: ");
         String name = input.next();
-        if (vectors.containsKey(name)) {
+        if (workspace.getVectors().containsKey(name)) {
             System.out.println("Exists!");
             return;
         }
@@ -228,16 +247,17 @@ public class VectorVision {
             System.out.print("[" + i + "]: ");
             components[i] = readFraction();
         }
-        vectors.put(name, new Vector(components));
+        workspace.addVector(name, new Vector(components));
         System.out.println("Saved" + name);
     }
 
     // MODIFIES: this
-    // EFFECTS: prompts user for matrix details and adds a new matrix to the workspace
+    // EFFECTS: prompts user for matrix details and adds a new matrix to the
+    // workspace
     public void readMatrix() {
         System.out.print("Name of your Matrix: ");
         String name = input.next();
-        if (matrices.containsKey(name)) {
+        if (workspace.getMatrices().containsKey(name)) {
             System.out.println("Exists!");
             return;
         }
@@ -254,7 +274,7 @@ public class VectorVision {
                 m.setElement(i, j, readFraction());
             }
         }
-        matrices.put(name, m);
+        workspace.addMatrix(name, m);
         System.out.println("Saved" + name);
     }
 
@@ -293,19 +313,20 @@ public class VectorVision {
     }
 
     // MODIFIES: this
-    // EFFECTS: prompts user for a vector name and returns the vector, or null if not found
+    // EFFECTS: prompts user for a vector name and returns the vector, or null if
+    // not found
     private Vector selectVector() {
-        if (vectors.isEmpty()) {
+        if (workspace.getVectors().isEmpty()) {
             System.out.println("No vectors.");
             return null;
         }
         System.out.print("Vector Name: ");
         String n = input.next();
-        if (!vectors.containsKey(n)) {
+        if (!workspace.getVectors().containsKey(n)) {
             System.out.println("Not found.");
             return null;
         }
-        return vectors.get(n);
+        return workspace.getVectors().get(n);
     }
 
     // MODIFIES: this
@@ -315,7 +336,7 @@ public class VectorVision {
         System.out.println(v.toString());
         System.out.print("Save as (name): ");
         String name = input.next();
-        vectors.put(name, v);
+        workspace.addVector(name, v);
         System.out.println("Saved.");
     }
 
@@ -337,21 +358,22 @@ public class VectorVision {
         printMatrixData(m);
         System.out.print("Save as (name): ");
         String name = input.next();
-        matrices.put(name, m);
+        workspace.addMatrix(name, m);
         System.out.println("Saved.");
     }
 
     // MODIFIES: this
-    // EFFECTS: prompts user for a matrix name and returns the matrix, or null if not found
+    // EFFECTS: prompts user for a matrix name and returns the matrix, or null if
+    // not found
     private Matrix selectMatrix() {
-        if (matrices.isEmpty()) {
+        if (workspace.getMatrices().isEmpty()) {
             System.out.println("No matrices available.");
             return null;
         }
         System.out.print("Enter matrix name: ");
         String name = input.next();
-        if (matrices.containsKey(name)) {
-            return matrices.get(name);
+        if (workspace.getMatrices().containsKey(name)) {
+            return workspace.getMatrices().get(name);
         } else {
             System.out.println("Matrix not found.");
             return null;
@@ -381,7 +403,8 @@ public class VectorVision {
     }
 
     // MODIFIES: this
-    // EFFECTS: computes the product of two user selected matrices and saves the result
+    // EFFECTS: computes the product of two user selected matrices and saves the
+    // result
     private void multiplyMatrix() {
         System.out.println("Select Matrix A:");
         Matrix m1 = selectMatrix();
@@ -424,7 +447,8 @@ public class VectorVision {
     }
 
     // MODIFIES: this
-    // EFFECTS: computes the transpose of a user selected matrix and saves the result
+    // EFFECTS: computes the transpose of a user selected matrix and saves the
+    // result
     private void transposeMatrix() {
         Matrix m = selectMatrix();
         if (m == null) {
@@ -434,7 +458,8 @@ public class VectorVision {
     }
 
     // MODIFIES: this
-    // EFFECTS: calculates and prints the determinant of a user selected square matrix
+    // EFFECTS: calculates and prints the determinant of a user selected square
+    // matrix
     private void determinantMatrix() {
         Matrix m = selectMatrix();
         if (m == null) {
@@ -448,7 +473,8 @@ public class VectorVision {
     }
 
     // MODIFIES: this
-    // EFFECTS: calculates the inverse of a user selected matrix and saves the result
+    // EFFECTS: calculates the inverse of a user selected matrix and saves the
+    // result
     private void inverseMatrix() {
         Matrix m = selectMatrix();
         if (m == null) {
@@ -466,7 +492,8 @@ public class VectorVision {
     }
 
     // MODIFIES: this
-    // EFFECTS: calculates and prints the RREF of a matrix, including the operations log
+    // EFFECTS: calculates and prints the RREF of a matrix, including the operations
+    // log
     private void rrefMatrix() {
         Matrix m = selectMatrix();
         if (m == null) {
@@ -474,7 +501,7 @@ public class VectorVision {
         }
         Matrix copy = m.copy();
         copy.calculaterref();
-        
+
         System.out.println("RREF Result:");
         printMatrixData(copy);
         System.out.println("\nOperations Log:");
@@ -485,8 +512,8 @@ public class VectorVision {
     // EFFECTS: solves the system Ax=b for user selected A and b; saves the solution
     private void solveSystem() {
         System.out.println("Select Coefficient Matrix A:");
-        Matrix A = selectMatrix();
-        if (A == null) {
+        Matrix a = selectMatrix();
+        if (a == null) {
             return;
         }
         System.out.println("Select Result Vector b:");
@@ -495,7 +522,7 @@ public class VectorVision {
             return;
         }
 
-        Vector solution = A.solve(b);
+        Vector solution = a.solve(b);
         if (solution == null) {
             System.out.println("No unique solution exists (inconsistent or infinite solutions).");
         } else {
@@ -638,7 +665,7 @@ public class VectorVision {
 
     // MODIFIES: this
     // EFFECTS: prompts user to choose column or row basis and displays the result;
-    //          allows user to save result vectors to the workspace
+    // allows user to save result vectors to the workspace
     private void basisMatrix() {
         Matrix m = selectMatrix();
         if (m == null) {
@@ -648,7 +675,7 @@ public class VectorVision {
         System.out.println("\tc -> Column Space Basis");
         System.out.println("\tr -> Row Space Basis");
         String choice = input.next().toLowerCase();
-        
+
         Vector[] basis;
         if (choice.equals("c")) {
             basis = m.getColumnBasisVectors();
@@ -664,7 +691,7 @@ public class VectorVision {
         for (Vector v : basis) {
             System.out.println(v.toString());
         }
-        
+
         handleBasisSaving(basis);
     }
 
@@ -680,10 +707,32 @@ public class VectorVision {
             for (int i = 0; i < basis.length; i++) {
                 System.out.print("Name for basis vector " + (i + 1) + ": ");
                 String name = input.next();
-                vectors.put(name, basis[i]);
+                workspace.addVector(name, basis[i]);
             }
             System.out.println("Vectors saved.");
         }
     }
 
+    // EFFECTS: saves the workspace to file
+    private void saveWorkspace() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(workspace);
+            jsonWriter.close();
+            System.out.println("Saved " + workspace.getName() + " to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads workspace from file
+    private void loadWorkspace() {
+        try {
+            workspace = jsonReader.read();
+            System.out.println("Loaded " + workspace.getName() + " from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
 }
