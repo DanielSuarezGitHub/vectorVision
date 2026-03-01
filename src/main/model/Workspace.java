@@ -1,5 +1,6 @@
 package model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -16,27 +17,31 @@ public class Workspace implements Writable {
     // EFFECTS: constructs an empty workspace with the given name,
     // initializing empty collections for matrices and vectors
     public Workspace(String name) {
+        this.name = name;
+        this.matrices = new HashMap<>();
+        this.vectors = new HashMap<>();
     }
 
     // EFFECTS: returns the name of this workspace
     public String getName() {
-        return null;
+        return name;
     }
 
     // EFFECTS: returns the map of matrices currently stored in the workspace
     public Map<String, Matrix> getMatrices() {
-        return null;
+        return matrices;
     }
 
     // EFFECTS: returns the map of vectors currently stored in the workspace
     public Map<String, Vector> getVectors() {
-        return null;
+        return vectors;
     }
 
     // REQUIRES: name != null, m != null
     // EFFECTS: adds the matrix m to the workspace under the given name.
     // If a matrix with the same name already exists, it is replaced.
     public void addMatrix(String name, Matrix m) {
+        matrices.put(name, m);
     }
 
     // REQUIRES: name != null, v != null
@@ -44,6 +49,7 @@ public class Workspace implements Writable {
     // EFFECTS: adds the vector v to the workspace under the given name.
     // If a vector with the same name already exists, it is replaced.
     public void addVector(String name, Vector v) {
+        vectors.put(name, v);
     }
 
     // REQUIRES: name != null
@@ -52,7 +58,7 @@ public class Workspace implements Writable {
     // exists,
     // returns the removed matrix, or null if it was not found
     public Matrix removeMatrix(String name) {
-        return null;
+        return matrices.remove(name);
     }
 
     // REQUIRES: name != null
@@ -61,12 +67,12 @@ public class Workspace implements Writable {
     // exists,
     // returns the removed vector, or null if it was not found
     public Vector removeVector(String name) {
-        return null;
+        return vectors.remove(name);
     }
 
     // EFFECTS: returns true if the workspace contains no matrices and no vectors
     public boolean isEmpty() {
-        return false;
+        return matrices.isEmpty() && vectors.isEmpty();
     }
 
     // EFFECTS: returns this workspace as a JSON object
