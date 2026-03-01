@@ -116,10 +116,12 @@ public class Fraction implements Writable {
         return String.valueOf(this.getNumerator()) + '/' + String.valueOf(this.getDenominator());
     }
 
-    // EFFECTS: returns this fraction as a JSON object.
+    // EFFECTS: returns this fraction as a JSON object
     @Override
     public JSONObject toJson() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toJson'");
+        JSONObject json = new JSONObject();
+        json.put("numerator", this.numerator);
+        json.put("denominator", this.denominator); 
+        return json;
     }
 }

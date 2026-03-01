@@ -150,13 +150,13 @@ public class FractionTest {
         Fraction f1 = new Fraction(3, 4);
         JSONObject json1 = f1.toJson();
         
-        assertEquals(3, json1.get("numerator"));
-        assertEquals(4, json1.get("denominator"));
+        assertEquals((long) 3, json1.get("numerator"));
+        assertEquals((long) 4, json1.get("denominator"));
         Fraction f2 = new Fraction(-7, 2);
         JSONObject json2 = f2.toJson();
         
-        assertEquals(-7, json2.get("numerator"));
-        assertEquals(2, json2.get("denominator"));
+        assertEquals((long) -7, json2.get("numerator"));
+        assertEquals((long) 2, json2.get("denominator"));
     }
 }
 
