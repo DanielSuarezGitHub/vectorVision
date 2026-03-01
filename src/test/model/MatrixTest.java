@@ -6,8 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
 
 public class MatrixTest {
@@ -384,5 +387,26 @@ public class MatrixTest {
 
         Matrix rectM = new Matrix(2, 3);
         assertFalse(rectM.isSquare());
+    }
+
+    @Test
+    void testToJson() {
+        Matrix m = new Matrix(2, 2);
+        m.setElement(0, 0, new Fraction(1, 2));
+        m.setElement(0, 1, new Fraction(3, 4));
+        m.setElement(1, 0, new Fraction(5, 6));
+        m.setElement(1, 1, new Fraction(7, 8));
+
+        JSONObject json = m.toJson();
+        assertEquals(2, json.getInt("rows"));
+        assertEquals(2, json.getInt("cols"));
+        JSONArray rowsArray = json.getJSONArray("data");
+        assertEquals(2, rowsArray.length());
+
+        JSONObject row0Json = rowsArray.getJSONObject(0);
+        JSONArray components0 = row0Json.getJSONArray("components");
+        JSONObject frac01 = components0.getJSONObject(1);
+        assertEquals(3, frac01.getLong("numerator"));
+        assertEquals(4, frac01.getLong("denominator"));
     }
 }
