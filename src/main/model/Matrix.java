@@ -3,20 +3,22 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import persistence.Writable;
 
 // Represents a matrix of Fractions with defined rows and columns and a log of operations
 public class Matrix implements Writable {
-    private Fraction[][] data;       // 2D array storing matrix elements
-    private int rows;                // number of rows
-    private int cols;                // number of columns
-    private List<LogElement> log;    // history of row operations performed
+    private Fraction[][] data; // 2D array storing matrix elements
+    private int rows; // number of rows
+    private int cols; // number of columns
+    private List<LogElement> log; // history of row operations performed
 
     // REQUIRES: numRows > 0, numCols > 0
     // MODIFIES: this
-    // EFFECTS: constructs a matrix with given dimensions; all entries initialized to 0
+    // EFFECTS: constructs a matrix with given dimensions; all entries initialized
+    // to 0
     public Matrix(int numRows, int numCols) {
         this.rows = numRows;
         this.cols = numCols;
@@ -29,7 +31,8 @@ public class Matrix implements Writable {
         }
     }
 
-    // REQUIRES: row >= 0, row < getNumRows(), col >= 0, col < getNumCols(), f != null
+    // REQUIRES: row >= 0, row < getNumRows(), col >= 0, col < getNumCols(), f !=
+    // null
     // MODIFIES: this
     // EFFECTS: sets the element at [row][col] to f
     public void setElement(int row, int col, Fraction f) {
@@ -42,7 +45,8 @@ public class Matrix implements Writable {
         return data[row][col];
     }
 
-    // REQUIRES: m2 != null, getNumRows() == m2.getNumRows(), getNumCols() == m2.getNumCols()
+    // REQUIRES: m2 != null, getNumRows() == m2.getNumRows(), getNumCols() ==
+    // m2.getNumCols()
     // EFFECTS: returns a new Matrix that is the sum of this and m2
     public Matrix add(Matrix m2) {
         Matrix m3 = new Matrix(getNumRows(), getNumCols());
@@ -71,7 +75,8 @@ public class Matrix implements Writable {
     }
 
     // REQUIRES: v != null, getNumCols() == v.size()
-    // EFFECTS: returns a new Vector that is the result of the transformation (this * v)
+    // EFFECTS: returns a new Vector that is the result of the transformation (this
+    // * v)
     public Vector multiplyVector(Vector v) {
         Fraction[] resultComponents = new Fraction[this.rows];
         for (int i = 0; i < this.rows; i++) {
@@ -145,7 +150,8 @@ public class Matrix implements Writable {
     }
 
     // REQUIRES: this matrix is augmented and in RREF, i >= 0, i < getNumRows()
-    // EFFECTS: returns true if row i represents a contradiction example [0 0 ... 0 | non-zero] 
+    // EFFECTS: returns true if row i represents a contradiction example [0 0 ... 0
+    // | non-zero]
     private boolean isRowContradictory(int i) {
         Fraction b = this.data[i][getNumCols() - 1];
         boolean coefficientsAreZero = true;
@@ -209,7 +215,8 @@ public class Matrix implements Writable {
         log.add(new ScaleRow(row, scalar));
     }
 
-    // REQUIRES: sourceRow >= 0, sourceRow < getNumRows(), destRow >= 0, destRow < getNumRows(), scalar != null
+    // REQUIRES: sourceRow >= 0, sourceRow < getNumRows(), destRow >= 0, destRow <
+    // getNumRows(), scalar != null
     // MODIFIES: this
     // EFFECTS: adds (scalar * sourceRow) to destRow; adds operation to log
     private void addRowMultiple(int sourceRow, int destRow, Fraction scalar) {
@@ -257,7 +264,7 @@ public class Matrix implements Writable {
 
     // EFFECTS: returns true if number of rows equals number of columns
     public boolean isSquare() {
-     return cols == rows;
+        return cols == rows;
     }
 
     // EFFECTS: returns the history (list) of row operations performed during RREF
@@ -280,7 +287,8 @@ public class Matrix implements Writable {
         }
         return new Vector(colData);
     }
-    // EFFECTS: returns number of rows  in this Matrix.
+
+    // EFFECTS: returns number of rows in this Matrix.
     public int getNumRows() {
         return rows;
     }
@@ -290,8 +298,10 @@ public class Matrix implements Writable {
         return cols;
     }
 
-    // REQUIRES: col >= 0, col < getNumCols(), startRow >= 0, startRow < getNumRows()
-    // EFFECTS: returns index of row with largest absolute value in column col, searching from startRow downwards
+    // REQUIRES: col >= 0, col < getNumCols(), startRow >= 0, startRow <
+    // getNumRows()
+    // EFFECTS: returns index of row with largest absolute value in column col,
+    // searching from startRow downwards
     private int findPivotRow(int col, int startRow) {
         int maxRow = startRow;
         double maxVal = Math.abs(data[startRow][col].toDecimal());
@@ -305,9 +315,11 @@ public class Matrix implements Writable {
         return maxRow;
     }
 
-    // REQUIRES: j >= 0, j < getNumCols(), pivotRow >= 0, pivotRow < getNumRows(), getElement(pivotRow, j) == 1
+    // REQUIRES: j >= 0, j < getNumCols(), pivotRow >= 0, pivotRow < getNumRows(),
+    // getElement(pivotRow, j) == 1
     // MODIFIES: this
-    // EFFECTS: performs row operations to eliminate values above and below the pivot at 
+    // EFFECTS: performs row operations to eliminate values above and below the
+    // pivot at
     private void elimanateColumn(int j, int pivotRow) {
         for (int i = 0; i < this.getNumRows(); i++) {
             if (i == pivotRow) {
@@ -348,7 +360,8 @@ public class Matrix implements Writable {
     }
 
     // REQUIRES: m != null
-    // EFFECTS: returns a new Matrix consisting of m augmented with the identity matrix
+    // EFFECTS: returns a new Matrix consisting of m augmented with the identity
+    // matrix
     private Matrix augmentIdentity(Matrix m) {
         Matrix augmented = new Matrix(m.getNumRows(), 2 * m.getNumCols());
         for (int i = 0; i < augmented.getNumRows(); i++) {
@@ -373,7 +386,8 @@ public class Matrix implements Writable {
         return logString;
     }
 
-    // EFFECTS: returns the product of determinant effects from all logged operations
+    // EFFECTS: returns the product of determinant effects from all logged
+    // operations
     private Fraction getOverallDeterminantEffect() {
         Fraction overAllEffect = new Fraction(1, 1);
         for (LogElement i : log) {
@@ -383,7 +397,7 @@ public class Matrix implements Writable {
     }
 
     // REQUIRES: isSquare() == true
-    // EFFECTS: returns the trace  of this matrix.
+    // EFFECTS: returns the trace of this matrix.
     public Fraction getTrace() {
         Fraction sum = new Fraction(0, 1);
         for (int i = 0; i < rows; i++) {
@@ -428,10 +442,22 @@ public class Matrix implements Writable {
 
     }
 
-    // EFFECTS: returns this matrix as a JSON object containing its dimensions and a JSON array of its row vectors
+    // EFFECTS: returns this matrix as a JSON object containing its dimensions and a
+    // JSON array of its row vectors
     @Override
     public JSONObject toJson() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toJson'");
+        JSONObject json = new JSONObject();
+        json.put("rows", this.rows);
+        json.put("cols", this.cols);
+
+        JSONArray rowsArray = new JSONArray();
+
+        for (int i = 0; i < this.rows; i++) {
+            Vector rowVec = this.getRowVector(i);
+            rowsArray.put(rowVec.toJson());
+        }
+
+        json.put("data", rowsArray);
+        return json;
     }
 }
