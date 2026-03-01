@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class WorkspaceTest {
     private Workspace testWorkspace;
     private Matrix m1;
@@ -124,6 +127,28 @@ public class WorkspaceTest {
 
     @Test
     void testToJson() {
-        // TODO WORK IN PROGRESS
+        testWorkspace.addMatrix("Mat A", m1);
+        testWorkspace.addVector("Vec U", v1);
+
+        JSONObject json = testWorkspace.toJson();
+
+        assertEquals("My VectorVision Workspace", json.getString("name"));
+
+        JSONArray matricesArray = json.getJSONArray("matrices");
+        assertEquals(1, matricesArray.length());
+
+        JSONArray vectorsArray = json.getJSONArray("vectors");
+        assertEquals(1, vectorsArray.length());
+
+        JSONObject matEntry = matricesArray.getJSONObject(0);
+        assertEquals("Mat A", matEntry.getString("name"));
+        JSONObject matrixData = matEntry.getJSONObject("matrix");
+        assertEquals(2, matrixData.getInt("rows"));
+
+        JSONObject vecEntry = vectorsArray.getJSONObject(0);
+        assertEquals("Vec U", vecEntry.getString("name"));
+        JSONObject vectorData = vecEntry.getJSONObject("vector");
+        assertNotNull(vectorData.getJSONArray("components"));
+        
     }
 }
