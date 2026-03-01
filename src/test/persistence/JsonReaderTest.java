@@ -30,7 +30,7 @@ public class JsonReaderTest {
         JsonReader reader = new JsonReader("./data/testReaderEmptyWorkspace.json");
         try {
             Workspace ws = reader.read();
-            assertEquals("Empty Test Workspace", ws.getName());
+            assertEquals("Empty test workspace", ws.getName());
             assertTrue(ws.isEmpty());
         } catch (IOException e) {
             fail("Couldn't read from file");
