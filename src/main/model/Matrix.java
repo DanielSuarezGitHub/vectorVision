@@ -3,8 +3,12 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
+import persistence.Writable;
+
 // Represents a matrix of Fractions with defined rows and columns and a log of operations
-public class Matrix {
+public class Matrix implements Writable {
     private Fraction[][] data;       // 2D array storing matrix elements
     private int rows;                // number of rows
     private int cols;                // number of columns
@@ -422,5 +426,12 @@ public class Matrix {
             return false;
         }
 
+    }
+
+    // EFFECTS: returns this matrix as a JSON object containing its dimensions and a JSON array of its row vectors
+    @Override
+    public JSONObject toJson() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'toJson'");
     }
 }
