@@ -1,0 +1,39 @@
+{
+    "vectors": [{
+        "name": "Vec1",
+        "vector": {"components": [{
+            "numerator": 1,
+            "denominator": 1
+        }]}
+    }],
+    "name": "General Workspace",
+    "matrices": [{
+        "name": "Mat1",
+        "matrix": {
+            "data": [
+                {"components": [
+                    {
+                        "numerator": 0,
+                        "denominator": 1
+                    },
+                    {
+                        "numerator": 0,
+                        "denominator": 1
+                    }
+                ]},
+                {"components": [
+                    {
+                        "numerator": 0,
+                        "denominator": 1
+                    },
+                    {
+                        "numerator": 0,
+                        "denominator": 1
+                    }
+                ]}
+            ],
+            "rows": 2,
+            "cols": 2
+        }
+    }]
+}
