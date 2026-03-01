@@ -19,3 +19,5 @@ I plan to do a  Combined Computer Science and Statistics major, and I often find
 * As a user, I want to be able to **remove** a specific matrix or vector from my workspace.
 * As a user, I want to select a matrix and view its **Reduced Row Echelon Form (RREF)**, including the sequence of row operations performed.
 * As a user, I want to be able to **multiply** a matrix by a vector and have the resulting vector automatically added to my workspace.
+* As a user, i went to be able to **save** my entire workspace (all matrices and vectors) to a file, if I so choose.
+* As a user, I want to be able to **load** my previously saved workspace from a file so I can resume exactly where I left off, if I so choose.
