@@ -2,8 +2,12 @@ package model;
 
 import java.lang.Math;
 
+import org.json.JSONObject;
+
+import persistence.Writable;
+
 // Represents a rational number (fraction) with a numerator and denominator.
-public class Fraction {
+public class Fraction implements Writable {
     private long numerator;
     private long denominator;
 
@@ -110,5 +114,12 @@ public class Fraction {
     // EFFECTS: returns a string representation of the fraction example "1/2"
     public String toString() {
         return String.valueOf(this.getNumerator()) + '/' + String.valueOf(this.getDenominator());
+    }
+
+    // EFFECTS: returns this fraction as a JSON object.
+    @Override
+    public JSONObject toJson() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'toJson'");
     }
 }
