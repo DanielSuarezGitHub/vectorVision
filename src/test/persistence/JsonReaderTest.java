@@ -4,13 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-
+import ca.ubc.cs.ExcludeFromJacocoGeneratedReport;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
 import model.Workspace;
 
+@ExcludeFromJacocoGeneratedReport
 // Credit to CPSC 210 JsonSerilizationDemo repository;
 public class JsonReaderTest {
 
