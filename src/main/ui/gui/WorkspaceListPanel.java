@@ -32,26 +32,26 @@ public class WorkspaceListPanel extends JPanel {
         refreshList();
 
         workspaceList.addListSelectionListener(e -> {
-                String selected = workspaceList.getSelectedValue();
-                if (selected != null && selected.contains("(Matrix)")) {
-                    String rawName = selected.replace(" (Matrix)", "");
-                    plane.setActiveTransform(workspace.getMatrices().get(rawName));
-                } else {
-                    plane.setActiveTransform(null); 
-                }
+            String selected = workspaceList.getSelectedValue();
+            if (selected != null && selected.contains("(Matrix)")) {
+                String rawName = selected.replace(" (Matrix)", "");
+                plane.setActiveTransform(workspace.getMatrices().get(rawName));
+            } else {
+                plane.setActiveTransform(null);
+            }
         });
     }
-    
+
     // MODIFIES: this
-    // EFFECTS: clears the current visual list model and entirely reconstructs it by 
+    // EFFECTS: clears the current visual list model and entirely reconstructs it by
     // pulling the current matrix and vector keys from the workspace
     public void refreshList() {
-        listModel.clear(); 
-        
+        listModel.clear();
+
         for (String matrixName : workspace.getMatrices().keySet()) {
             listModel.addElement(matrixName + " (Matrix)");
         }
-        
+
         for (String vectorName : workspace.getVectors().keySet()) {
             listModel.addElement(vectorName + " (Vector)");
         }

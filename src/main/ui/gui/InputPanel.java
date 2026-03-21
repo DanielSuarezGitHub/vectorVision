@@ -39,13 +39,13 @@ public class InputPanel extends JPanel {
         JPanel vectorPanel = new JPanel();
         vectorPanel.setBorder(BorderFactory.createTitledBorder("New Vector"));
         
-        JTextField xField = new JTextField("1");
-        JTextField yField = new JTextField("1");
+        JTextField xfield = new JTextField("1");
+        JTextField yfield = new JTextField("1");
         JButton btnAddVector = new JButton("Add Vector");
 
         btnAddVector.addActionListener(e -> {
-            int x = Integer.parseInt(xField.getText().trim());
-            int y = Integer.parseInt(yField.getText().trim());
+            int x = Integer.parseInt(xfield.getText().trim());
+            int y = Integer.parseInt(yfield.getText().trim());
             
             Fraction[] comps = { new Fraction(x, 1), new Fraction(y, 1) };
             Vector v = new Vector(comps);
@@ -57,9 +57,9 @@ public class InputPanel extends JPanel {
         });
 
         vectorPanel.add(new JLabel("X:"));
-        vectorPanel.add(xField);
+        vectorPanel.add(xfield);
         vectorPanel.add(new JLabel("Y:"));
-        vectorPanel.add(yField);
+        vectorPanel.add(yfield);
         vectorPanel.add(btnAddVector);
 
         return vectorPanel;
@@ -67,6 +67,7 @@ public class InputPanel extends JPanel {
 
     // MODIFIES: this
     // EFFECTS: creates and returns the UI subpanel containing a 2x2 grid of matrix input fields and its submit button
+    @SuppressWarnings("methodlength")
     private JPanel buildMatrixPanel() {
         JPanel matrixPanel = new JPanel();
         matrixPanel.setBorder(BorderFactory.createTitledBorder("New 2x2 Matrix"));
@@ -77,8 +78,10 @@ public class InputPanel extends JPanel {
         JTextField m11 = new JTextField("1");
 
         JPanel matrixGrid = new JPanel(new GridLayout(2, 2));
-        matrixGrid.add(m00); matrixGrid.add(m01);
-        matrixGrid.add(m10); matrixGrid.add(m11);
+        matrixGrid.add(m00);
+        matrixGrid.add(m01);
+        matrixGrid.add(m10);
+        matrixGrid.add(m11);
 
         JButton btnAddMatrix = new JButton("Add Matrix");
 

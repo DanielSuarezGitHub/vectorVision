@@ -1,6 +1,6 @@
 package ui.gui;
-import javax.swing.*;
 
+import javax.swing.*;
 import model.Fraction;
 import model.Vector;
 import model.Workspace;
@@ -9,9 +9,9 @@ import java.awt.*;
 
 // Represents the main application window that ties the data model and UI panels together
 public class VectorVisionGui2d extends JFrame {
-    
 
-    // EFFECTS: constructs the main application window, initializes the central workspace session, 
+    // EFFECTS: constructs the main application window, initializes the central
+    // workspace session,
     // and arranges the subpanels using a BorderLayout
     public VectorVisionGui2d() {
         super("VectorVision");
@@ -33,6 +33,6 @@ public class VectorVisionGui2d extends JFrame {
 
     // EFFECTS: launches the VectorVision application
     public static void main(String[] args) {
-       new VectorVisionGui2d();
+        new VectorVisionGui2d();
     }
 }

@@ -11,6 +11,7 @@ import persistence.JsonWriter;
 import model.Matrix;
 import java.util.Scanner;
 
+// Represents the Console UI for the vector Vision tool.
 public class VectorVision {
     private static final String JSON_STORE = "./data/workspace.json";
     private Workspace workspace;
