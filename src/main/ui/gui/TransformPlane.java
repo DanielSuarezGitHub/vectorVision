@@ -18,7 +18,8 @@ public class TransformPlane extends JPanel {
     private final int SCALE = 30; 
     private final int GRID_LIMIT = 10; 
 
-    public TransformPlane() {
+    public TransformPlane(Workspace ws) {
+        this.workspace = ws;
         setBackground(new Color(255, 255, 224)); 
         setBorder(BorderFactory.createTitledBorder("Cartesian Plane"));
     }
@@ -53,6 +54,21 @@ public class TransformPlane extends JPanel {
             }
         }
 
+        for (Vector v : workspace.getVectors().values()) {
+            double vx = v.getComponent(0).toDecimal() * SCALE;
+            double vy = v.getComponent(1).toDecimal() * SCALE;
+
+            if (activeTransform != null) {
+                drawArrow(g2, vx, vy, new Color(180, 180, 180, 150), 2.0f);
+                
+                Vector transformed = activeTransform.multiplyVector(v);
+                double tx = transformed.getComponent(0).toDecimal() * SCALE;
+                double ty = transformed.getComponent(1).toDecimal() * SCALE;
+                drawArrow(g2, tx, ty, new Color(220, 50, 50), 4.0f); 
+            } else {
+                drawArrow(g2, vx, vy, new Color(50, 100, 220), 4.0f); 
+            }
+        }
 
     }
 
@@ -79,8 +95,14 @@ public class TransformPlane extends JPanel {
         g2.draw(new Line2D.Double(tx1, ty1, tx2, ty2));
     }
 
-    private void drawArrow() {
 
+    // MODIFIES: g2
+    // EFFECTS: draws a vector line from the origin to the specified scaled (x,y) coordinates 
+    private void drawArrow(Graphics2D g2, double x, double y, Color color, float thickness) {
+        g2.setColor(color);
+        g2.setStroke(new BasicStroke(thickness));
+        g2.draw(new Line2D.Double(0, 0, x, y));
+       
     }
 
 
@@ -90,7 +112,7 @@ public class TransformPlane extends JPanel {
         testFrame.setSize(600, 600);
         testFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TransformPlane plane = new TransformPlane();
+        TransformPlane plane = new TransformPlane(new Workspace("test"));
         Matrix testMatrix = new Matrix(2, 2);
         testMatrix.setElement(0, 0, new Fraction(1, 1));
         testMatrix.setElement(0, 1, new Fraction(1, 1));
@@ -101,5 +123,7 @@ public class TransformPlane extends JPanel {
         testFrame.add(plane);
         testFrame.setVisible(true);
     }
+
+
     
 }
