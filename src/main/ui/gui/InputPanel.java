@@ -10,13 +10,14 @@ import model.Workspace;
 
 // Represents the data entry UI panel where users can input parameters to create new vectors and matrices
 public class InputPanel extends JPanel {
-    
+    private TransformPlane plane;
     private Workspace workspace;
     private WorkspaceListPanel listPanel;
 
     // EFFECTS: constructs the input panel, initializes text fields and buttons, 
     //          and binds the action listeners to the provided workspace and list panel
-    public InputPanel(Workspace ws, WorkspaceListPanel listPanel) {
+    public InputPanel(Workspace ws, WorkspaceListPanel listPanel, TransformPlane plane) {
+        this.plane = plane;
         this.workspace = ws;
         this.listPanel = listPanel;
 
@@ -52,6 +53,7 @@ public class InputPanel extends JPanel {
             String name = "V" + (workspace.getVectors().size() + 1);
             workspace.addVector(name, v);
             listPanel.refreshList(); 
+            plane.repaint();
         });
 
         vectorPanel.add(new JLabel("X:"));
@@ -90,6 +92,7 @@ public class InputPanel extends JPanel {
             String name = "M" + (workspace.getMatrices().size() + 1);
             workspace.addMatrix(name, m);
             listPanel.refreshList(); 
+            plane.repaint();
         });
 
         matrixPanel.add(matrixGrid);

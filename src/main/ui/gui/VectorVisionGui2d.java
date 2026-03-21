@@ -19,13 +19,9 @@ public class VectorVisionGui2d extends JFrame {
         setSize(800, 600);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // TEMPORARY
-        Fraction[] v1Comps = {new Fraction(2, 1), new Fraction(3, 1)};
-        myWorkspace.addVector("V1", new Vector(v1Comps));
-        // TEMPORARY
-        WorkspaceListPanel listPanel = new WorkspaceListPanel(myWorkspace);
         TransformPlane plane = new TransformPlane(myWorkspace);
-        InputPanel inputPanel = new InputPanel(myWorkspace, listPanel);
+        WorkspaceListPanel listPanel = new WorkspaceListPanel(myWorkspace, plane);
+        InputPanel inputPanel = new InputPanel(myWorkspace, listPanel, plane);
 
         add(listPanel, BorderLayout.WEST);
         add(plane, BorderLayout.CENTER);
