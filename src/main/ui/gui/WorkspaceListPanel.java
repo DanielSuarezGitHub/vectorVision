@@ -16,6 +16,8 @@ public class WorkspaceListPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: constructs the list panel, initializes the list model and JList,
     // wraps the list in a scroll pane, and populates it with workspace data;
+    // and creates a delete button
+    @SuppressWarnings("methodlength")
     public WorkspaceListPanel(Workspace ws, TransformPlane plane) {
         this.plane = plane;
         this.workspace = ws;
@@ -38,6 +40,26 @@ public class WorkspaceListPanel extends JPanel {
                 plane.setActiveTransform(workspace.getMatrices().get(rawName));
             } else {
                 plane.setActiveTransform(null);
+            }
+        });
+
+        JButton btnDelete = new JButton("Delete Selected");
+        add(btnDelete, BorderLayout.SOUTH);
+
+        btnDelete.addActionListener(e -> {
+            String selected = workspaceList.getSelectedValue();
+
+            if (selected != null) {
+                if (selected.contains("(Matrix)")) {
+                    String rawName = selected.replace(" (Matrix)", "");
+                    plane.setActiveTransform(null);
+                    workspace.getMatrices().remove(rawName);
+                } else if (selected.contains("(Vector)")) {
+                    String rawName = selected.replace(" (Vector)", "");
+                    workspace.getVectors().remove(rawName);
+                }
+                refreshList();
+                plane.repaint();
             }
         });
     }

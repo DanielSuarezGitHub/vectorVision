@@ -1,8 +1,6 @@
 package ui.gui;
 
 import javax.swing.*;
-import model.Fraction;
-import model.Vector;
 import model.Workspace;
 
 import java.awt.*;
