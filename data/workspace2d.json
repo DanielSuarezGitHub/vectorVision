@@ -1,0 +1,17 @@
+{
+    "vectors": [{
+        "name": "V1",
+        "vector": {"components": [
+            {
+                "numerator": 1,
+                "denominator": 1
+            },
+            {
+                "numerator": 1,
+                "denominator": 1
+            }
+        ]}
+    }],
+    "name": "My Session",
+    "matrices": []
+}

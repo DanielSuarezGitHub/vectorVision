@@ -21,3 +21,11 @@ I plan to do a  Combined Computer Science and Statistics major, and I often find
 * As a user, I want to be able to **multiply** a matrix by a vector and have the resulting vector automatically added to my workspace.
 * As a user, i went to be able to **save** my entire workspace (all matrices and vectors) to a file, if I so choose.
 * As a user, I want to be able to **load** my previously saved workspace from a file so I can resume exactly where I left off, if I so choose.
+
+# Instructions for End User
+- You can view the panel that displays the Xs that have already been added to the Y by looking at the blue "Workspace List" on the left side of the window.
+- You can generate the first required action related to the user story "adding multiple Xs to a Y" by typing X and Y values into the green panel at the bottom and clicking "Add Vector" to save it to the workspace.
+- You can generate the second required action related to the user story "adding multiple Xs to a Y" by selecting a Vector or Matrix in the Workspace List and clicking "Delete Selected" to remove it from the workspace.
+- You can locate my visual component by looking at the central "Cartesian Plane". Adding vectors will draw them here, and clicking a Matrix in the list will visually warp the grid and transform the vectors.
+- You can save the state of my application by clicking the 'X' to close the window, which will trigger a popup asking if you want to save.
+- You can reload the state of my application by launching the app, which will immediately trigger a popup asking if you want to load your previous session.
