@@ -16,6 +16,7 @@ public class VectorVisionGui2d extends JFrame {
     private JsonReader jsonReader;
     private static final String JSON_STORE = "./data/workspace2d.json";
     private Workspace myWorkspace;
+    
     // EFFECTS: constructs the main application window, initializes the central
     // workspace session,
     // and arranges the subpanels using a BorderLayout
