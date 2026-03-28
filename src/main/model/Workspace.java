@@ -41,16 +41,20 @@ public class Workspace implements Writable {
     // REQUIRES: name != null, m != null
     // EFFECTS: adds the matrix m to the workspace under the given name.
     // If a matrix with the same name already exists, it is replaced.
+    // logs event to event log.
     public void addMatrix(String name, Matrix m) {
         matrices.put(name, m);
+        EventLog.getInstance().logEvent(new Event("Added matrix '" + name + "' to workspace."));
     }
 
     // REQUIRES: name != null, v != null
     // MODIFIES: this
     // EFFECTS: adds the vector v to the workspace under the given name.
     // If a vector with the same name already exists, it is replaced.
+    // logs event to event log.
     public void addVector(String name, Vector v) {
         vectors.put(name, v);
+        EventLog.getInstance().logEvent(new Event("Added vector '" + name + "' to workspace."));
     }
 
     // REQUIRES: name != null
@@ -58,8 +62,14 @@ public class Workspace implements Writable {
     // EFFECTS: removes the matrix with the given name from the workspace if it
     // exists,
     // returns the removed matrix, or null if it was not found
+    // Logs event to log
     public Matrix removeMatrix(String name) {
-        return matrices.remove(name);
+        if (matrices.containsKey(name)) {
+            EventLog.getInstance().logEvent(new Event("Removed matrix '" + name + "' from workspace."));
+            return matrices.remove(name);
+        } else {
+            return null;
+        }
     }
 
     // REQUIRES: name != null
@@ -67,8 +77,14 @@ public class Workspace implements Writable {
     // EFFECTS: removes the vector with the given name from the workspace if it
     // exists,
     // returns the removed vector, or null if it was not found
+    // Logs event to log
     public Vector removeVector(String name) {
-        return vectors.remove(name);
+        if (vectors.containsKey(name)) {
+            EventLog.getInstance().logEvent(new Event("Removed vector '" + name + "' from workspace."));
+            return vectors.remove(name);
+        } else {
+            return null;
+        }
     }
 
     // EFFECTS: returns true if the workspace contains no matrices and no vectors
@@ -94,8 +110,8 @@ public class Workspace implements Writable {
         JSONArray vectorsArray = new JSONArray();
         for (String key : vectors.keySet()) {
             JSONObject vectorEntry = new JSONObject();
-            vectorEntry.put("name", key); 
-            vectorEntry.put("vector", vectors.get(key).toJson()); 
+            vectorEntry.put("name", key);
+            vectorEntry.put("vector", vectors.get(key).toJson());
             vectorsArray.put(vectorEntry);
         }
         json.put("vectors", vectorsArray);

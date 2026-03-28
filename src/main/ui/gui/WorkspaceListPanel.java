@@ -53,10 +53,10 @@ public class WorkspaceListPanel extends JPanel {
                 if (selected.contains("(Matrix)")) {
                     String rawName = selected.replace(" (Matrix)", "");
                     plane.setActiveTransform(null);
-                    workspace.getMatrices().remove(rawName);
+                    workspace.removeMatrix(rawName);
                 } else if (selected.contains("(Vector)")) {
                     String rawName = selected.replace(" (Vector)", "");
-                    workspace.getVectors().remove(rawName);
+                    workspace.removeVector(rawName);;
                 }
                 refreshList();
                 plane.repaint();

@@ -9,6 +9,8 @@ import java.awt.event.WindowEvent;
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import model.Event;
+import model.EventLog;
 
 // Represents the main application window that ties the data model and UI panels together
 public class VectorVisionGui2d extends JFrame {
@@ -84,6 +86,12 @@ public class VectorVisionGui2d extends JFrame {
                         System.out.println("Failed to save file.");
                     }
                 }
+
+                System.out.println("Event Log: \n");
+                for (Event el : EventLog.getInstance()) {
+                    System.out.println(el.toString());
+                }
+
                 System.exit(0); 
             }
         });
