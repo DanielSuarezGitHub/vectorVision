@@ -29,3 +29,9 @@ I plan to do a  Combined Computer Science and Statistics major, and I often find
 - You can locate my visual component by looking at the central "Cartesian Plane". Adding vectors will draw them here, and clicking a Matrix in the list will visually warp the grid and transform the vectors.
 - You can save the state of my application by clicking the 'X' to close the window, which will trigger a popup asking if you want to save.
 - You can reload the state of my application by launching the app, which will immediately trigger a popup asking if you want to load your previous session.
+
+# Phase 4: Task 3
+
+If I had more time to work on this project, I would refactor my Model package by extracting common behaviors from my Vector and Matrix classes into an abstract superclass called LinearComponent or an interface like Transformable. Currently, both Vectors and Matrices share similar fundamental traits: they are both composed of a collection of Fraction objects, they both require specific formatting to print to the console or GUI, and they both implement the Writable interface for JSON serialization.
+
+By pushing these shared fields and methods up into an abstract superclass, I could significantly reduce code duplication and improve cohesion. Furthermore, this would allow me to refactor the Workspace class. Instead of maintaining two separate maps one Map<String, Vector> and one Map<String, Matrix>, the Workspace could maintain a single Map<String, LinearComponent>. This would simplify the logic for adding, deleting, and rendering items.
