@@ -15,53 +15,53 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Unit tests for the Event class
  */
 public class EventTest {
-	private Event e;
-	private Date d;
-	
-	//NOTE: these tests might fail if time at which line (2) below is executed
-	//is different from time that line (1) is executed.  Lines (1) and (2) must
-	//run in same millisecond for this test to make sense and pass.
-	
-	@BeforeEach
-	public void runBefore() {
-		e = new Event("Sensor open at door");   // (1)
-		d = Calendar.getInstance().getTime();   // (2)
-	}
-	
-	@Test
-	public void testEvent() {
-		assertEquals("Sensor open at door", e.getDescription());
-		assertEquals(d, e.getDate());
-	}
+    private Event event;
+    private Date date;
 
-	@Test
-	public void testToString() {
-		assertEquals(d.toString() + "\n" + "Sensor open at door", e.toString());
-	}
+    // NOTE: these tests might fail if time at which line (2) below is executed
+    // is different from time that line (1) is executed. Lines (1) and (2) must
+    // run in same millisecond for this test to make sense and pass.
+
+    @BeforeEach
+    public void runBefore() {
+        event = new Event("Sensor open at door"); // (1)
+        date = Calendar.getInstance().getTime(); // (2)
+    }
+
+    @Test
+    public void testEvent() {
+        assertEquals("Sensor open at door", event.getDescription());
+        assertEquals(date, event.getDate());
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals(date.toString() + "\n" + "Sensor open at door", event.toString());
+    }
 
     @Test
     public void testEqualsSameObject() {
-        assertTrue(e.equals(e));
+        assertTrue(event.equals(event));
     }
 
     @Test
     public void testEqualsNull() {
-        assertFalse(e.equals(null));
+        assertFalse(event.equals(null));
     }
 
     @Test
     public void testEqualsDifferentClass() {
-        assertFalse(e.equals("I am a String, not an Event"));
+        assertFalse(event.equals("I am a String, not an Event"));
     }
 
     @Test
     public void testEqualsDifferentEvent() {
-        Event eDifferent = new Event("A completely different event");
-        assertFalse(e.equals(eDifferent));
+        Event edifferent = new Event("A completely different event");
+        assertFalse(event.equals(edifferent));
     }
 
     @Test
     public void testHashCode() {
-        assertEquals(e.hashCode(), e.hashCode());
+        assertEquals(event.hashCode(), event.hashCode());
     }
 }
